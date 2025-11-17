@@ -1,0 +1,362 @@
+/* Admin Common Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.menu {
+    width: 280px !important;
+    min-width: 280px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(15px) !important;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.08) !important;
+    border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+    padding: 20px 0 !important;
+    position: relative !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+    flex-shrink: 0 !important;
+    z-index: 100 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+.menu-container {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.menu-row {
+    margin: 5px 0 !important;
+}
+
+.menu-btn {
+    padding: 12px 20px !important;
+    transition: all 0.3s ease !important;
+    border-radius: 12px !important;
+    margin: 5px 10px !important;
+    background-position: 20px 50% !important;
+    background-repeat: no-repeat !important;
+    cursor: pointer !important;
+}
+
+.menu-btn:hover {
+    background-color: rgba(102, 126, 234, 0.1) !important;
+    transform: translateX(5px) !important;
+}
+
+.menu-text {
+    padding-left: 50px !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    color: #444 !important;
+    text-align: left !important;
+}
+
+.menu-btn:hover .menu-text {
+    color: #667eea !important;
+}
+
+.non-style-link-menu {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.menu-active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.profile-container {
+    background: rgba(102, 126, 234, 0.05) !important;
+    border-radius: 15px !important;
+    padding: 15px !important;
+    margin: 10px !important;
+}
+
+.dash-body {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    border-radius: 25px !important;
+    margin: 20px !important;
+    padding: 30px !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1) !important;
+    flex: 1 !important;
+}
+
+.filter-container {
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(102, 126, 234, 0.1) !important;
+}
+
+.filter-container tr td {
+    vertical-align: top !important;
+}
+
+.filter-container tr td[style*="width: 25%"] {
+    height: 100% !important;
+}
+
+.sub-table, .dashbord-tables {
+    background: white !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.table-headin {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    padding: 15px !important;
+}
+
+.sub-table tbody tr {
+    transition: all 0.3s ease !important;
+}
+
+.sub-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.05) !important;
+    transform: scale(1.01) !important;
+}
+
+.btn-primary, .login-btn, .btn-primary-soft {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 12px 30px !important;
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover, .login-btn:hover, .btn-primary-soft:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
+}
+
+.btn-primary-soft {
+    background: rgba(102, 126, 234, 0.1) !important;
+    color: #667eea !important;
+    border: 2px solid rgba(102, 126, 234, 0.2) !important;
+}
+
+.btn-primary-soft:hover {
+    background: rgba(102, 126, 234, 0.2) !important;
+}
+
+.input-text, .filter-container-items, .header-searchbar {
+    border: 2px solid rgba(102, 126, 234, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 12px 15px !important;
+    font-size: 15px !important;
+    transition: all 0.3s ease !important;
+    color: #333 !important;
+    background-color: #fff !important;
+    font-weight: 500 !important;
+}
+
+.input-text::placeholder, .filter-container-items::placeholder, .header-searchbar::placeholder {
+    color: #999 !important;
+    opacity: 1 !important;
+}
+
+.input-text:focus, .filter-container-items:focus, .header-searchbar:focus {
+    outline: none !important;
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    color: #333 !important;
+    background-color: #fff !important;
+}
+
+input[type="text"], input[type="date"], input[type="time"], input[type="number"], input[type="search"] {
+    color: #333 !important;
+    background-color: #fff !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+select.filter-container-items, select.box {
+    min-height: 45px !important;
+    line-height: 1.5 !important;
+    padding: 10px 15px !important;
+    color: #333 !important;
+    background-color: #fff !important;
+    font-weight: 500 !important;
+}
+
+select.filter-container-items option[disabled] {
+    color: #999 !important;
+    font-style: italic !important;
+}
+
+.header-searchbar {
+    border-radius: 12px !important;
+    padding: 12px 45px 12px 18px !important;
+}
+
+.header-search {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+    position: relative !important;
+}
+
+.header-search::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/search.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+    opacity: 0.6;
+}
+
+.header-search input[type="search"] {
+    padding-left: 45px !important;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.nav-bar {
+    background: transparent !important;
+}
+
+.nav-bar p {
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+p {
+    color: #666 !important;
+    line-height: 1.7 !important;
+}
+
+.non-style-link {
+    color: #667eea !important;
+    transition: color 0.3s !important;
+}
+
+.non-style-link:hover {
+    color: #764ba2 !important;
+}
+
+.dashbord-tables {
+    animation: transitionIn-Y-over 0.5s;
+}
+
+.filter-container {
+    animation: transitionIn-Y-bottom 0.5s;
+}
+
+.sub-table {
+    animation: transitionIn-Y-bottom 0.5s;
+}
+
+/* Dashboard Specific Styles */
+.dashboard-items {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 20px !important;
+    color: white !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+    transition: all 0.4s ease !important;
+    border: none !important;
+    min-height: 140px !important;
+    height: 100% !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.dashboard-items > div:first-child {
+    flex: 1 !important;
+}
+
+.dashboard-icons {
+    width: 60px !important;
+    height: 60px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+    align-self: center !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    padding: 8px !important;
+    width: 32px !important;
+    height: 32px !important;
+    background-size: 16px 16px !important;
+}
+
+.dashboard-items:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4) !important;
+}
+
+.h1-dashboard {
+    color: white !important;
+    font-weight: 900 !important;
+    font-size: 42px !important;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.h3-dashboard {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600 !important;
+}
+

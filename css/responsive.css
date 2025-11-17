@@ -1,0 +1,147 @@
+/* Responsive Design - Common Styles for All Sections */
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.98);
+    border: none;
+    padding: 12px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-size: 24px;
+}
+
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.menu-overlay.active {
+    display: block;
+}
+
+/* Responsive Design - Tablet (1024px) */
+@media (max-width: 1024px) {
+    .dash-body {
+        margin: 15px !important;
+        padding: 15px !important;
+    }
+    
+    .filter-container {
+        overflow-x: auto;
+    }
+    
+    .dashboard-items {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Responsive Design - Mobile (768px) */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .menu {
+        position: fixed !important;
+        left: -280px !important;
+        transition: left 0.3s ease !important;
+        z-index: 1000 !important;
+        height: 100vh !important;
+    }
+    
+    .menu.active {
+        left: 0 !important;
+    }
+    
+    .menu-overlay.active {
+        display: block;
+    }
+    
+    .dash-body {
+        margin: 10px !important;
+        padding: 10px !important;
+        width: 100% !important;
+    }
+    
+    .container {
+        flex-direction: column !important;
+    }
+    
+    .dashboard-items {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .filter-container {
+        padding: 15px !important;
+        overflow-x: auto;
+    }
+    
+    .header-search {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    
+    .header-searchbar {
+        width: 100% !important;
+    }
+    
+    .filter-container-items {
+        width: 100% !important;
+        margin: 5px 0 !important;
+    }
+    
+    .sub-table {
+        overflow-x: auto;
+    }
+}
+
+/* Responsive Design - Small Mobile (480px) */
+@media (max-width: 480px) {
+    .menu {
+        width: 100% !important;
+    }
+    
+    .dash-body {
+        margin: 5px !important;
+        padding: 10px !important;
+    }
+    
+    .dashboard-items {
+        gap: 10px !important;
+    }
+    
+    .h1-dashboard {
+        font-size: 28px !important;
+    }
+    
+    .h3-dashboard {
+        font-size: 14px !important;
+    }
+    
+    .profile-container {
+        padding: 10px !important;
+    }
+    
+    .menu-btn {
+        padding: 10px 15px !important;
+    }
+    
+    .menu-text {
+        padding-left: 40px !important;
+        font-size: 14px !important;
+    }
+}
+
