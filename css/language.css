@@ -1,0 +1,137 @@
+/* RTL Support */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+}
+
+/* RTL specific adjustments */
+[dir="rtl"] .nav-container {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .nav-links {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stats-grid,
+[dir="rtl"] .specialties-grid,
+[dir="rtl"] .doctors-grid,
+[dir="rtl"] .features-grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .stat-card {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stat-icon {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+[dir="rtl"] .hero-buttons {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .section-title::after {
+    left: auto;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+/* Font adjustments for Arabic */
+[dir="rtl"] body {
+    font-family: 'Segoe UI', 'Arial', 'Tahoma', 'Arabic UI Text', sans-serif;
+}
+
+/* Smooth transition when switching languages */
+html {
+    transition: direction 0.3s ease;
+}
+
+/* RTL Menu adjustments - Icons on right, text beside them */
+html[dir="rtl"] .menu-btn,
+[dir="rtl"] .menu-btn {
+    background-position: calc(100% - 20px) 50% !important;
+    background-position: right 20px center !important;
+    text-align: right !important;
+}
+
+html[dir="rtl"] .menu-text,
+[dir="rtl"] .menu-text {
+    padding-left: 0 !important;
+    padding-right: 50px !important;
+    text-align: right !important;
+}
+
+html[dir="rtl"] .menu-active,
+[dir="rtl"] .menu-active {
+    border-right: none !important;
+    border-left: 7px solid var(--primarycolor) !important;
+}
+
+html[dir="rtl"] .menu-btn:hover,
+[dir="rtl"] .menu-btn:hover {
+    transform: translateX(-5px) !important;
+}
+
+/* RTL Table adjustments - Text starts from right in Arabic */
+[dir="rtl"] table {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+[dir="rtl"] table td,
+[dir="rtl"] table th {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+[dir="rtl"] table td[style*="text-align: center"],
+[dir="rtl"] table th[style*="text-align: center"] {
+    text-align: center !important;
+}
+
+[dir="rtl"] .sub-table,
+[dir="rtl"] .sub-table td,
+[dir="rtl"] .sub-table th {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+[dir="rtl"] .sub-table th {
+    text-align: right !important;
+}
+
+/* Override inline styles and custom styles for tables in RTL */
+[dir="rtl"] .sub-table th[style*="text-align: left"],
+[dir="rtl"] .sub-table td[style*="text-align: left"] {
+    text-align: right !important;
+}
+
+[dir="rtl"] table th[style*="text-align: left"],
+[dir="rtl"] table td[style*="text-align: left"] {
+    text-align: right !important;
+}
+
+/* Ensure all table content is right-aligned in RTL */
+[dir="rtl"] .dash-body table,
+[dir="rtl"] .dash-body table td,
+[dir="rtl"] .dash-body table th {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+[dir="rtl"] .filter-container table,
+[dir="rtl"] .filter-container table td,
+[dir="rtl"] .filter-container table th {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+

@@ -13,9 +13,11 @@
     }
     
     include("../connection.php");
+    include("../translations.php");
+    $page_title = t('schedule');
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,8 +25,21 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/language.css">
         
-    <title>Schedule</title>
+    <title><?php echo $page_title; ?></title>
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto;
+            left: 15px;
+        }
+    </style>
     <style>
         * {
             margin: 0;
@@ -240,6 +255,39 @@
             background: white !important;
             border-radius: 20px !important;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        }
+    </style>
+    <style>
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-active {
+            border-right: none !important;
+            border-left: 7px solid var(--primarycolor) !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
         }
     </style>
 </head>

@@ -14,6 +14,7 @@
     }
 
     include("../connection.php");
+    include("../translations.php");
 
     $query = "SELECT * FROM specialties";
     $result = mysqli_query($database, $query);
@@ -24,7 +25,7 @@
     $username = $userfetch["pname"];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +33,8 @@
   <link rel="stylesheet" href="../css/animations.css">  
   <link rel="stylesheet" href="../css/main.css">  
   <link rel="stylesheet" href="../css/admin.css">
-  <title>Specialties</title>
+  <link rel="stylesheet" href="../css/language.css">
+  <title><?php echo t('specialties'); ?></title>
 
   <style>
     * {
@@ -192,6 +194,24 @@
         border-radius: 15px !important;
         padding: 15px !important;
         margin: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .profile-container td[width="30%"] {
+        width: 30% !important;
+        min-width: 30% !important;
+        max-width: 30% !important;
+    }
+    
+    .profile-container img[src*="user.png"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    .profile-container table {
+        width: 100% !important;
     }
 
     .dash-body h1 {
@@ -422,6 +442,48 @@
   </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto !important;
+            left: 15px !important;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div class="container">
@@ -441,7 +503,7 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+              <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
             </td>
           </tr>
         </table>
@@ -451,33 +513,33 @@
     <tr class="menu-row">
       <td class="menu-btn menu-icon-home">
         <a href="index.php">
-          <div><p class="menu-text">Home</p></div>
+          <div><p class="menu-text"><?php echo t('home'); ?></p></div>
         </a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-doctor">
-        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></div></a>
+        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('all_doctors'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-session">
-        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
+        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-appoinment">
-        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Bookings</p></div></a>
+        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-appoinment menu-active menu-icon-specialties-active ">
-        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">Specialties</p></div></a>
+        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-settings">
-        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></div></a>
+        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></div></a>
       </td>
     </tr>
   </table>
@@ -485,27 +547,24 @@
 
 
 <div class="dash-body">
-  <h1>Select a Specialty</h1>
+  <h1><?php echo t('select_a_specialty'); ?></h1>
 
   <div class="specialties">
     <?php
     if (mysqli_num_rows($result) > 0) {
-      $icons = ['🩺', '💊', '🫀', '🧠', '👁️', '🦷', '🦴', '👶', '🏥', '🔬', '💉', '🩹'];
-      $iconIndex = 0;
       while($row = mysqli_fetch_assoc($result)) {
-        $icon = $icons[$iconIndex % count($icons)];
-        $iconIndex++;
+        $icon = getSpecialtyIcon($row['sname']);
         echo '
           <a href="doctors_by_specialty.php?id='.$row['id'].'">
             <div class="card">
               <div class="card-icon">'.$icon.'</div>
-              <h3>'.$row['sname'].'</h3>
+              <h3>'.translateSpecialty($row['sname']).'</h3>
             </div>
           </a>
         ';
       }
     } else {
-      echo "<p style='text-align:center; font-size:18px; color:#666; padding: 40px;'>No specialties found.</p>";
+      echo "<p style='text-align:center; font-size:18px; color:#666; padding: 40px;'>".t('no_specialties')."</p>";
     }
     ?>
   </div>

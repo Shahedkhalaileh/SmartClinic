@@ -16,6 +16,7 @@
     
 
     include("../connection.php");
+    include("../translations.php");
     $userrow = $database->query("select * from patient where pemail='$useremail'");
     $userfetch=$userrow->fetch_assoc();
     $userid= $userfetch["pid"];
@@ -25,7 +26,7 @@
     $today = date('Y-m-d');
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -33,8 +34,9 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/language.css">
         
-    <title>Sessions</title>
+    <title><?php echo t('schedule'); ?></title>
     <style>
         * {
             margin: 0;
@@ -157,6 +159,34 @@
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .profile-container td[width="30%"] {
+            width: 30% !important;
+            min-width: 30% !important;
+            max-width: 30% !important;
+        }
+        
+        .profile-container img[src*="user.png"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        .profile-container table {
+            width: 100% !important;
+        }
+        
+        .profile-title {
+            color: #333 !important;
+            font-weight: 600 !important;
+        }
+        
+        .profile-subtitle {
+            color: #666 !important;
+            font-weight: 400 !important;
         }
         
         .sub-table {
@@ -377,6 +407,48 @@
     </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto !important;
+            left: 15px !important;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="container">
@@ -396,7 +468,7 @@
                          </tr>
                          <tr>
                              <td colspan="2">
-                                 <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                 <a href="../logout.php" ><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                              </td>
                          </tr>
                  </table>
@@ -404,33 +476,33 @@
              </tr>
              <tr class="menu-row" >
                     <td class="menu-btn menu-icon-home " >
-                        <a href="index.php" class="non-style-link-menu "><div><p class="menu-text">Home</p></a></div></a>
+                        <a href="index.php" class="non-style-link-menu "><div><p class="menu-text"><?php echo t('home'); ?></p></a></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-doctor">
-                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></a></div>
+                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('all_doctors'); ?></p></a></div>
                     </td>
                 </tr>
                 
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-session menu-active menu-icon-session-active">
-                        <a href="schedule.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Scheduled Sessions</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Bookings</p></a></div>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></a></div>
                     </td>
                 </tr>
                     <tr class="menu-row" >
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">Specialties</p></a></div>
+                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-settings">
-                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></a></div>
+                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></a></div>
                     </td>
                 </tr>
                 
@@ -442,7 +514,7 @@
                 $sqlpt1="";
                 $insertkey="";
                 $q='';
-                $searchtype="All";
+                $searchtype=t('all');
                         if($_POST){
                         //print_r($_POST);
                         
@@ -452,7 +524,7 @@
                             $sqlmain= "select * from schedule inner join doctor on schedule.docid=doctor.docid where schedule.scheduledate>='$today' and (doctor.docname='$keyword' or doctor.docname like '$keyword%' or doctor.docname like '%$keyword' or doctor.docname like '%$keyword%' or schedule.title='$keyword' or schedule.title like '$keyword%' or schedule.title like '%$keyword' or schedule.title like '%$keyword%' or schedule.scheduledate like '$keyword%' or schedule.scheduledate like '%$keyword' or schedule.scheduledate like '%$keyword%' or schedule.scheduledate='$keyword' )  order by schedule.scheduledate asc";
                             //echo $sqlmain;
                             $insertkey=$keyword;
-                            $searchtype="Search Result : ";
+                            $searchtype=t('search_result');
                             $q='"';
                         }
 
@@ -468,12 +540,12 @@
             <table border="0" width="100%" style=" border-spacing: 0;margin:0;padding:0;margin-top:25px; ">
                 <tr >
                     <td width="13%" >
-                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text">Back</font></button></a>
+                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text"><?php echo t('back'); ?></font></button></a>
                     </td>
                     <td >
                             <form action="" method="post" class="header-search">
 
-                                        <input type="search" name="search" class="input-text header-searchbar" placeholder="Search Doctor name or Email or Date (YYYY-MM-DD)" list="doctors" value="<?php  echo $insertkey ?>">&nbsp;&nbsp;
+                                        <input type="search" name="search" class="input-text header-searchbar" placeholder="<?php echo t('search_doctor_or_date'); ?>" list="doctors" value="<?php  echo $insertkey ?>">&nbsp;&nbsp;
                                         
                                         <?php
                                             echo '<datalist id="doctors">';
@@ -504,12 +576,12 @@
             ?>
                                         
                                 
-                                        <input type="Submit" value="Search" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
+                                        <input type="Submit" value="<?php echo t('search'); ?>" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
                                         </form>
                     </td>
                     <td width="15%">
                         <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
-                            Today's Date
+                            <?php echo t('todays_date'); ?>
                         </p>
                         <p class="heading-sub12" style="padding: 0;margin: 0;">
                             <?php 
@@ -532,7 +604,7 @@
                 
                 <tr>
                     <td colspan="4" style="padding-top:10px;width: 100%;" >
-                        <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)"><?php echo $searchtype." Sessions"."(".$result->num_rows.")"; ?> </p>
+                        <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)"><?php echo $searchtype." ".t('sessions')."(".$result->num_rows.")"; ?> </p>
                         <p class="heading-main12" style="margin-left: 45px;font-size:22px;color:rgb(49, 49, 49)"><?php echo $q.$insertkey.$q ; ?> </p>
                     </td>
                     
@@ -561,8 +633,8 @@
                                     <img src="../img/notfound.svg" width="25%">
                                     
                                     <br>
-                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; Show all Sessions &nbsp;</font></button>
+                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_sessions_found').'</p>
+                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('show_all_sessions').' &nbsp;</font></button>
                                     </a>
                                     </center>
                                     <br><br><br><br>
@@ -601,10 +673,10 @@
                                                                 '.substr($docname,0,30).'
                                                             </div>
                                                             <div class="h4-search">
-                                                                '.$scheduledate.'<br>Starts: <b>@'.substr($scheduletime,0,5).'</b> (24h)
+                                                                '.$scheduledate.'<br>'.t('starts').' <b>@'.substr($scheduletime,0,5).'</b> (24h)
                                                             </div>
                                                             <br>
-                                                            <a href="booking.php?id='.$scheduleid.'" ><button  class="login-btn btn-primary-soft btn "  style="padding-top:11px;padding-bottom:11px;width:100%"><font class="tn-in-text">Book Now</font></button></a>
+                                                            <a href="booking.php?id='.$scheduleid.'" ><button  class="login-btn btn-primary-soft btn "  style="padding-top:11px;padding-bottom:11px;width:100%"><font class="tn-in-text">'.t('book_now').'</font></button></a>
                                                     </div>
                                                             
                                                 </div>

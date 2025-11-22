@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("../connection.php");
+include("../translations.php");
 
 if (!isset($_SESSION["user"]) || $_SESSION["usertype"] != 'd') {
   header("location: ../login.php");
@@ -42,7 +43,7 @@ if (isset($_POST["save"])) {
   }
   
   if ($database->query($sql)) {
-    $msg = "Medical record saved successfully!";
+    $msg = t("medical_record_saved_successfully");
   } else {
     $msg = "Error: " . $database->error;
   }
@@ -51,7 +52,7 @@ if (isset($_POST["save"])) {
 $patients = $database->query("SELECT * FROM patient");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -59,7 +60,8 @@ $patients = $database->query("SELECT * FROM patient");
   <link rel="stylesheet" href="../css/animations.css">  
   <link rel="stylesheet" href="../css/main.css">  
   <link rel="stylesheet" href="../css/admin.css">
-  <title>Medical Record</title>
+  <link rel="stylesheet" href="../css/language.css">
+  <title><?php echo t('medical_record'); ?></title>
   <style>
   * {
     margin: 0;
@@ -158,6 +160,24 @@ $patients = $database->query("SELECT * FROM patient");
     border-radius: 15px !important;
     padding: 15px !important;
     margin: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .profile-container td[width="30%"] {
+    width: 30% !important;
+    min-width: 30% !important;
+    max-width: 30% !important;
+  }
+  
+  .profile-container img[src*="user.png"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  .profile-container table {
+    width: 100% !important;
   }
   
   .dash-body {
@@ -241,6 +261,11 @@ $patients = $database->query("SELECT * FROM patient");
     transform: translateY(-3px);
     box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
     background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+  
+  .logout-btn {
+    width: 100% !important;
+    margin-top: 15px !important;
   }
   
   p.msg {
@@ -353,6 +378,42 @@ $patients = $database->query("SELECT * FROM patient");
   </style>
 </head>
 <body>
+    <div class="language-switcher-header" style="position: absolute; top: 15px; right: 15px; z-index: 1001;">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        [dir="rtl"] .language-switcher-header {
+            right: auto;
+            left: 15px;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div class="container">
@@ -372,67 +433,67 @@ $patients = $database->query("SELECT * FROM patient");
           </tr>
           <tr>
             <td colspan="2">
-              <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+              <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
             </td>
           </tr>
         </table>
       </td>
     </tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-dashbord"><a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></div></a></td></tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-appoinment"><a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Appointments</p></div></a></td></tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-session"><a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">My Sessions</p></div></a></td></tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-patient"><a href="patient.php" class="non-style-link-menu"><div><p class="menu-text">My Patients</p></div></a></td></tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-patient menu-active"><a href="medical_record.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Medical Records</p></div></a></td></tr>
-    <tr class="menu-row"><td class="menu-btn menu-icon-settings"><a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-dashbord"><a href="index.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-appoinment"><a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-session"><a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_sessions'); ?></p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-patient"><a href="patient.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_patients'); ?></p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-patient menu-active"><a href="medical_record.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('medical_records'); ?></p></div></a></td></tr>
+    <tr class="menu-row"><td class="menu-btn menu-icon-settings"><a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></div></a></td></tr>
   </table>
 </div>
 
 <div class="dash-body">
   <div class="form-card">
     <?php if (isset($msg)) echo "<p class='msg'>$msg</p>"; ?>
-    <h2>Medical Record</h2>
+    <h2><?php echo t('medical_record'); ?></h2>
 
     <form action="" method="POST">
-      <label>Select Patient:</label>
+      <label><?php echo t('select_patient'); ?>:</label>
       <select name="pid" required>
-        <option value="">-- Select the patient --</option>
+        <option value=""><?php echo t('select_the_patient'); ?></option>
         <?php while($p = $patients->fetch_assoc()) echo "<option value='{$p['pid']}'>{$p['pname']}</option>"; ?>
       </select>
 
-      <label>Weight (kg):</label>
-      <input type="text" name="weight" placeholder="Enter weight">
+      <label><?php echo t('weight_kg'); ?></label>
+      <input type="text" name="weight" placeholder="<?php echo t('enter_weight'); ?>">
 
-      <label>Height (cm):</label>
-      <input type="text" name="height" placeholder="Enter height">
+      <label><?php echo t('height_cm'); ?></label>
+      <input type="text" name="height" placeholder="<?php echo t('enter_height'); ?>">
 
-      <label>Allergy:</label>
-      <input type="text" name="allergy" placeholder="Enter any allergies">
+      <label><?php echo t('allergy'); ?></label>
+      <input type="text" name="allergy" placeholder="<?php echo t('enter_any_allergies'); ?>">
 
-      <label>Surgical History:</label>
-      <textarea name="surgical_history" placeholder="Enter any surgical history"></textarea>
+      <label><?php echo t('surgical_history'); ?></label>
+      <textarea name="surgical_history" placeholder="<?php echo t('enter_surgical_history'); ?>"></textarea>
 
-      <label>Diabetes:</label>
+      <label><?php echo t('diabetes'); ?></label>
       <select name="diabetes" required>
-        <option value="No">No</option>
-        <option value="Yes">Yes</option>
+        <option value="No"><?php echo t('no'); ?></option>
+        <option value="Yes"><?php echo t('yes'); ?></option>
       </select>
 
-      <label>Hypertension:</label>
+      <label><?php echo t('hypertension'); ?></label>
       <select name="hypertension" required>
-        <option value="No">No</option>
-        <option value="Yes">Yes</option>
+        <option value="No"><?php echo t('no'); ?></option>
+        <option value="Yes"><?php echo t('yes'); ?></option>
       </select>
 
-      <label>Diagnosis:</label>
-      <textarea name="diagnosis" required></textarea>
+      <label><?php echo t('diagnosis'); ?></label>
+      <textarea name="diagnosis" required placeholder="<?php echo t('enter_diagnosis'); ?>"></textarea>
 
-      <label>Treatment:</label>
-      <textarea name="treatment"></textarea>
+      <label><?php echo t('treatment'); ?></label>
+      <textarea name="treatment" placeholder="<?php echo t('enter_treatment'); ?>"></textarea>
 
-      <label>Additional Notes:</label>
-      <textarea name="notes"></textarea>
+      <label><?php echo t('additional_notes'); ?></label>
+      <textarea name="notes" placeholder="<?php echo t('enter_additional_notes'); ?>"></textarea>
 
-      <button type="submit" name="save">Save Record</button>
+      <button type="submit" name="save"><?php echo t('save_record'); ?></button>
     </form>
   </div>
 </div>

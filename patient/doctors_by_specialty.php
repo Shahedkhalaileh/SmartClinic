@@ -14,6 +14,7 @@
     }
 
     include("../connection.php");
+    include("../translations.php");
 
     if (!isset($_GET['id'])) {
         header("location: specialties.php");
@@ -30,7 +31,7 @@
         exit();
     }
     
-    $specialty = mysqli_fetch_assoc($spec_result)['sname'];
+    $specialty = translateSpecialty(mysqli_fetch_assoc($spec_result)['sname']);
 
     $query = "SELECT * FROM doctor WHERE specialties = $specialty_id";
     $result = mysqli_query($database, $query);
@@ -41,7 +42,7 @@
     $username = $userfetch["pname"];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,7 +50,8 @@
   <link rel="stylesheet" href="../css/animations.css">  
   <link rel="stylesheet" href="../css/main.css">  
   <link rel="stylesheet" href="../css/admin.css">
-  <title>Doctors in <?php echo $specialty; ?></title>
+  <link rel="stylesheet" href="../css/language.css">
+  <title><?php echo t('doctors_in'); ?> <?php echo htmlspecialchars($specialty); ?></title>
 
   <style>
     * {
@@ -209,6 +211,24 @@
         border-radius: 15px !important;
         padding: 15px !important;
         margin: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .profile-container td[width="30%"] {
+        width: 30% !important;
+        min-width: 30% !important;
+        max-width: 30% !important;
+    }
+    
+    .profile-container img[src*="user.png"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    .profile-container table {
+        width: 100% !important;
     }
 
     .dash-body h1 {
@@ -503,6 +523,48 @@
   </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto !important;
+            left: 15px !important;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div class="container">
@@ -522,7 +584,7 @@
           </tr>
           <tr>
             <td colspan="2">
-              <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+              <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
             </td>
           </tr>
         </table>
@@ -532,33 +594,33 @@
     <tr class="menu-row">
       <td class="menu-btn menu-icon-home">
         <a href="index.php">
-          <div><p class="menu-text">Home</p></div>
+          <div><p class="menu-text"><?php echo t('home'); ?></p></div>
         </a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-doctor">
-        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></div></a>
+        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('all_doctors'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-session">
-        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
+        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-appoinment">
-        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Bookings</p></div></a>
+        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-appoinment menu-active menu-icon-specialties-active ">
-        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">Specialties</p></div></a>
+        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></div></a>
       </td>
     </tr>
     <tr class="menu-row">
       <td class="menu-btn menu-icon-settings">
-        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></div></a>
+        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></div></a>
       </td>
     </tr>
   </table>
@@ -566,7 +628,7 @@
 
 
 <div class="dash-body">
-  <h1>Doctors in <?php echo htmlspecialchars($specialty); ?></h1>
+  <h1><?php echo t('doctors_in'); ?> <?php echo htmlspecialchars($specialty); ?></h1>
 
   <div class="doctors">
     <?php
@@ -584,15 +646,15 @@
               <p><strong>Email:</strong> '.htmlspecialchars($row['docemail']).'</p>
               <p><strong>Phone:</strong> '.htmlspecialchars($row['doctel']).'</p>
             </div>
-            <a href="schedule.php?doctor_id='.$row['docid'].'" class="book-btn">Book Appointment</a>
+            <a href="schedule.php?doctor_id='.$row['docid'].'" class="book-btn">'.htmlspecialchars(t('book_appointment')).'</a>
           </div>
         ';
       }
     } else {
       echo '<div class="no-doctors">
               <p style="font-size: 24px; margin-bottom: 10px;">👨‍⚕️</p>
-              <p>No doctors found in this specialty.</p>
-              <p style="margin-top: 20px;"><a href="specialties.php" style="color: #667eea; text-decoration: underline;">← Back to Specialties</a></p>
+              <p>'.htmlspecialchars(t('no_doctors')).'</p>
+              <p style="margin-top: 20px;"><a href="specialties.php" style="color: #667eea; text-decoration: underline;">← '.htmlspecialchars(t('back')).' '.htmlspecialchars(t('specialties')).'</a></p>
             </div>';
     }
     ?>

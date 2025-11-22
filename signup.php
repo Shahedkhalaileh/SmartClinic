@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("translations.php");
 
 $_SESSION["user"] = "";
 $_SESSION["usertype"] = "";
@@ -21,13 +22,13 @@ if ($_POST) {
     include("connection.php");
 
     if ($dob_val > date('Y-m-d')) {
-$error = "❌ You cannot select a future date!";
+$error = "❌ " . (isArabic() ? "لا يمكنك اختيار تاريخ في المستقبل!" : "You cannot select a future date!");
 
     } else {
 
         $check = $database->query("SELECT * FROM patient WHERE pnic='$nic_val'");
         if ($check->num_rows > 0) {
-$error = "❌ The ID number is already in use";
+$error = "❌ " . (isArabic() ? "رقم الهوية مستخدم بالفعل" : "The ID number is already in use");
 
         } else {
 
@@ -48,10 +49,10 @@ $error = "❌ The ID number is already in use";
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title><?php echo t('signup'); ?></title>
 
 <style>
 * {
@@ -70,6 +71,22 @@ body{
     padding: 20px;
     animation: gradientShift 15s ease infinite;
     background-size: 200% 200%;
+}
+
+.language-switcher-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+[dir="rtl"] .language-switcher-container {
+    right: auto;
+    left: 20px;
+}
+
+[dir="rtl"] label {
+    text-align: right;
 }
 
 @keyframes gradientShift {
@@ -207,32 +224,36 @@ label{
     text-decoration: underline;
 }
 </style>
-
+    <link rel="stylesheet" href="css/language.css">
 </head>
 
 <body>
 
+<div class="language-switcher-container">
+    <?php include("language-switcher.php"); ?>
+</div>
+
 <div class="container">
 
-    <p class="header-text">Sign Up</p>
+    <p class="header-text"><?php echo t('signup'); ?></p>
 
     <?php if($error) echo "<div class='error'>$error</div>"; ?>
 
     <form method="POST">
 
-        <label>First Name</label>
-        <input type="text" name="fname" class="input-text" required value="<?php echo $fname_val; ?>">
+        <label><?php echo isArabic() ? 'الاسم الأول' : 'First Name'; ?></label>
+        <input type="text" name="fname" class="input-text" required value="<?php echo htmlspecialchars($fname_val, ENT_QUOTES, 'UTF-8'); ?>">
 
-        <label>Last Name</label>
-        <input type="text" name="lname" class="input-text" required value="<?php echo $lname_val; ?>">
+        <label><?php echo isArabic() ? 'اسم العائلة' : 'Last Name'; ?></label>
+        <input type="text" name="lname" class="input-text" required value="<?php echo htmlspecialchars($lname_val, ENT_QUOTES, 'UTF-8'); ?>">
 
-        <label>Address</label>
-        <input type="text" name="address" class="input-text" required value="<?php echo $address_val; ?>">
+        <label><?php echo isArabic() ? 'العنوان' : 'Address'; ?></label>
+        <input type="text" name="address" class="input-text" required value="<?php echo htmlspecialchars($address_val, ENT_QUOTES, 'UTF-8'); ?>">
 
-        <label>National ID (NIC)</label>
-        <input type="text" name="nic" class="input-text" required value="<?php echo $nic_val; ?>">
+        <label><?php echo isArabic() ? 'رقم الهوية الوطنية (NIC)' : 'National ID (NIC)'; ?></label>
+        <input type="text" name="nic" class="input-text" required value="<?php echo htmlspecialchars($nic_val, ENT_QUOTES, 'UTF-8'); ?>">
 
-        <label>Date of Birth</label>
+        <label><?php echo isArabic() ? 'تاريخ الميلاد' : 'Date of Birth'; ?></label>
         <input type="date"
                name="dob"
                class="input-text"
@@ -241,30 +262,31 @@ label{
                value="<?php echo $dob_val; ?>"
                oninput="validateDOB(this)">
 
-        <label>Gender</label>
+        <label><?php echo isArabic() ? 'الجنس' : 'Gender'; ?></label>
         <select name="gender" class="input-text" required>
-            <option value="">Select</option>
-            <option value="Male" <?php if($gender_val=="Male") echo "selected"; ?>>Male</option>
-            <option value="Female" <?php if($gender_val=="Female") echo "selected"; ?>>Female</option>
+            <option value=""><?php echo isArabic() ? 'اختر' : 'Select'; ?></option>
+            <option value="Male" <?php if($gender_val=="Male") echo "selected"; ?>><?php echo isArabic() ? 'ذكر' : 'Male'; ?></option>
+            <option value="Female" <?php if($gender_val=="Female") echo "selected"; ?>><?php echo isArabic() ? 'أنثى' : 'Female'; ?></option>
         </select>
 
-        <button class="btn" type="submit">Next</button>
+        <button class="btn" type="submit"><?php echo isArabic() ? 'التالي' : 'Next'; ?></button>
     </form>
 
     <p style="text-align:center;margin-top:15px;">
-        Already have an account? <a href="login.php">Login</a>
+        <?php echo isArabic() ? 'لديك حساب بالفعل؟' : 'Already have an account?'; ?> <a href="login.php"><?php echo t('login'); ?></a>
     </p>
 
 </div>
 
 
 <script>
+var alertMessage = "❌ <?php echo isArabic() ? 'لا يمكنك اختيار تاريخ في المستقبل!' : 'You cannot select a future date!'; ?>";
 
 function validateDOB(input) {
     let today = new Date().toISOString().split("T")[0];
 
     if (input.value > today) {
-    alert("❌ You cannot select a future date!");
+        alert(alertMessage);
         input.value = today;
     }
 }

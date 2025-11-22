@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("connection.php");
+include("translations.php");
 
 $error = "";
 $typed_email = $_POST['useremail'] ?? "";
@@ -13,9 +14,9 @@ if ($_POST) {
     $typed_email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
 
     if (empty($email) || empty($password)) {
-        $error = "⚠ Please fill in all fields";
+        $error = "⚠ " . (isArabic() ? "الرجاء ملء جميع الحقول" : "Please fill in all fields");
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "⚠ Please enter a valid email address";
+        $error = "⚠ " . (isArabic() ? "الرجاء إدخال عنوان بريد إلكتروني صحيح" : "Please enter a valid email address");
     } else {
         // Check if email domain has valid MX records
         $email_parts = explode('@', $email);
@@ -77,7 +78,7 @@ if ($_POST) {
             }
             
             if (!$domain_valid) {
-                $error = "⚠ This email domain does not exist. Please check your email address.";
+                $error = "⚠ " . (isArabic() ? "نطاق البريد الإلكتروني هذا غير موجود. يرجى التحقق من عنوان بريدك الإلكتروني." : "This email domain does not exist. Please check your email address.");
             }
         }
     }
@@ -107,7 +108,7 @@ if ($_POST) {
                         header("Location: patient/index.php");
                         exit;
                     } else {
-                        $error = "⚠ The password is incorrect";
+                        $error = "⚠ " . (isArabic() ? "كلمة المرور غير صحيحة" : "The password is incorrect");
                     }
                 }
             } elseif ($type == 'a') {
@@ -124,7 +125,7 @@ if ($_POST) {
                         header("Location: admin/index.php");
                         exit;
                     } else {
-                        $error = "⚠ The password is incorrect";
+                        $error = "⚠ " . (isArabic() ? "كلمة المرور غير صحيحة" : "The password is incorrect");
                     }
                 }
             } elseif ($type == 'd') {
@@ -141,23 +142,23 @@ if ($_POST) {
                         header("Location: doctor/index.php");
                         exit;
                     } else {
-                        $error = "⚠ The password is incorrect";
+                        $error = "⚠ " . (isArabic() ? "كلمة المرور غير صحيحة" : "The password is incorrect");
                     }
                 }
             }
 
         } else {
-            $error = "⚠ No account found with this email";
+            $error = "⚠ " . (isArabic() ? "لم يتم العثور على حساب بهذا البريد الإلكتروني" : "No account found with this email");
         }
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title><?php echo t('login'); ?></title>
 
 <style>
 * {
@@ -176,6 +177,18 @@ body{
     padding: 20px;
     animation: gradientShift 15s ease infinite;
     background-size: 200% 200%;
+}
+
+.language-switcher-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+[dir="rtl"] .language-switcher-container {
+    right: auto;
+    left: 20px;
 }
 
 @keyframes gradientShift {
@@ -317,6 +330,8 @@ body{
 </style>
 
 <script>
+var emailErrorMsg = '⚠️ <?php echo isArabic() ? "الرجاء إدخال عنوان بريد إلكتروني صحيح (مثال: user@example.com)" : "Please enter a valid email address (e.g., user@example.com)"; ?>';
+
 function validateEmailField(input) {
     const email = input.value.trim();
     const errorDiv = document.getElementById('email-error');
@@ -329,7 +344,7 @@ function validateEmailField(input) {
     }
     
     if (!emailRegex.test(email)) {
-        errorDiv.textContent = '⚠️ Please enter a valid email address (e.g., user@example.com)';
+        errorDiv.textContent = emailErrorMsg;
         errorDiv.style.display = 'block';
         input.classList.add('invalid');
         input.classList.remove('valid');
@@ -348,12 +363,17 @@ function validateEmail() {
 }
 </script>
 
+    <link rel="stylesheet" href="css/language.css">
 </head>
 <body>
 
+<div class="language-switcher-container">
+    <?php include("language-switcher.php"); ?>
+</div>
+
 <div class="container">
 
-    <p class="header-text">Login</p>
+    <p class="header-text"><?php echo t('login'); ?></p>
 
     <?php if($error) echo "<div class='error'>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</div>"; ?>
 
@@ -363,21 +383,21 @@ function validateEmail() {
                name="useremail"
                id="useremail"
                class="input-text"
-               placeholder="Email Address"
+               placeholder="<?php echo isArabic() ? 'عنوان البريد الإلكتروني' : 'Email Address'; ?>"
                value="<?php echo htmlspecialchars($typed_email, ENT_QUOTES, 'UTF-8'); ?>" 
                required
                onblur="validateEmailField(this)">
 
-        <div id="email-error" style="color: #e74c3c; font-size: 12px; text-align: left; margin-top: -5px; margin-bottom: 10px; display: none;"></div>
+        <div id="email-error" style="color: #e74c3c; font-size: 12px; text-align: <?php echo isArabic() ? 'right' : 'left'; ?>; margin-top: -5px; margin-bottom: 10px; display: none;"></div>
 
-        <input type="password" name="userpassword" class="input-text" placeholder="Password" required>
+        <input type="password" name="userpassword" class="input-text" placeholder="<?php echo isArabic() ? 'كلمة المرور' : 'Password'; ?>" required>
 
-        <button class="btn" type="submit">Login</button>
+        <button class="btn" type="submit"><?php echo t('login'); ?></button>
 
     </form>
 
     <p style="margin-top:15px;">
-        Don't have an account? <a href="signup.php">Sign Up</a>
+        <?php echo isArabic() ? 'ليس لديك حساب؟' : "Don't have an account?"; ?> <a href="signup.php"><?php echo t('signup'); ?></a>
     </p>
 
 </div>

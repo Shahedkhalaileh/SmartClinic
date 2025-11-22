@@ -15,13 +15,14 @@
     }
     
     include("../connection.php");
+    include("../translations.php");
     $userrow = $database->query("select * from doctor where docemail='$useremail'");
     $userfetch=$userrow->fetch_assoc();
     $userid= $userfetch["docid"];
     $username=$userfetch["docname"];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,10 +30,11 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/language.css">
         
 
 
-    <title>Settings</title>
+    <title><?php echo t('settings'); ?></title>
     <style>
         * {
             margin: 0;
@@ -131,6 +133,34 @@
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .profile-container td[width="30%"] {
+            width: 30% !important;
+            min-width: 30% !important;
+            max-width: 30% !important;
+        }
+        
+        .profile-container img[src*="user.png"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        .profile-container table {
+            width: 100% !important;
+        }
+        
+        .profile-title {
+            color: #333 !important;
+            font-weight: 600 !important;
+        }
+        
+        .profile-subtitle {
+            color: #666 !important;
+            font-weight: 400 !important;
         }
         
         .dash-body {
@@ -192,15 +222,6 @@
             box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
         }
         
-        .btn-primary-soft {
-            background: rgba(102, 126, 234, 0.1) !important;
-            color: #667eea !important;
-            border: 2px solid rgba(102, 126, 234, 0.2) !important;
-        }
-        
-        .btn-primary-soft:hover {
-            background: rgba(102, 126, 234, 0.2) !important;
-        }
         
         .input-text, .filter-container-items {
             border: 2px solid rgba(102, 126, 234, 0.2) !important;
@@ -237,6 +258,11 @@
         
         .popup {
             animation: transitionIn-Y-bottom 0.5s;
+        }
+        
+        .logout-btn {
+            width: 100% !important;
+            margin-top: 15px !important;
         }
         
         .overlay {
@@ -371,6 +397,42 @@
     
 </head>
 <body>
+    <div class="language-switcher-header" style="position: absolute; top: 15px; right: 15px; z-index: 1001;">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        [dir="rtl"] .language-switcher-header {
+            right: auto;
+            left: 15px;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="container">
@@ -390,7 +452,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                     </table>
@@ -398,33 +460,33 @@
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-dashbord" >
-                        <a href="index.php" class="non-style-link-menu "><div><p class="menu-text">Dashboard</p></a></div></a>
+                        <a href="index.php" class="non-style-link-menu "><div><p class="menu-text"><?php echo t('dashboard'); ?></p></a></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Appointments</p></a></div>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></a></div>
                     </td>
                 </tr>
                 
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-session">
-                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">My Sessions</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_sessions'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-patient">
-                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text">My Patients</p></a></div>
+                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_patients'); ?></p></a></div>
                     </td>
                 </tr>
-                                 <tr class="menu-row" >
+                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-patient">
-                        <a href="medical_record.php" class="non-style-link-menu"><div><p class="menu-text">Medical Record for patient</p></a></div>
+                        <a href="medical_record.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('medical_record_for_patient'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-settings  menu-active menu-icon-settings-active">
-                        <a href="settings.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Settings</p></a></div>
+                        <a href="settings.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('settings'); ?></p></a></div>
                     </td>
                 </tr>
                 
@@ -436,16 +498,16 @@
                         <tr >
                             
                         <td width="13%" >
-                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text">Back</font></button></a>
+                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text"><?php echo t('back'); ?></font></button></a>
                     </td>
                     <td>
-                        <p style="font-size: 23px;padding-left:12px;font-weight: 600;">Settings</p>
+                        <p style="font-size: 23px;padding-left:12px;font-weight: 600;"><?php echo t('settings'); ?></p>
                                            
                     </td>
                     
                             <td width="15%">
-                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
-                                    Today's Date
+                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>;">
+                                    <?php echo t('todays_date'); ?>
                                 </p>
                                 <p class="heading-sub12" style="padding: 0;margin: 0;">
                                     <?php 
@@ -487,11 +549,11 @@
                                         <div class="btn-icon-back dashboard-icons-setting" style="background-image: url('../img/icons/doctors-hover.svg');"></div>
                                         <div>
                                                 <div class="h1-dashboard">
-                                                    Account Settings  &nbsp;
+                                                    <?php echo t('account_settings'); ?>  &nbsp;
 
                                                 </div><br>
                                                 <div class="h3-dashboard" style="font-size: 15px;">
-                                                    Edit your Account Details & Change Password
+                                                    <?php echo t('edit_account_details'); ?>
                                                 </div>
                                         </div>
                                                 
@@ -513,11 +575,11 @@
                                         <div class="btn-icon-back dashboard-icons-setting " style="background-image: url('../img/icons/view-iceblue.svg');"></div>
                                         <div>
                                                 <div class="h1-dashboard" >
-                                                    View Account Details
+                                                    <?php echo t('view_account_details'); ?>
                                                     
                                                 </div><br>
                                                 <div class="h3-dashboard"  style="font-size: 15px;">
-                                                    View Personal information About Your Account
+                                                    <?php echo t('view_personal_information'); ?>
                                                 </div>
                                         </div>
                                                 
@@ -538,11 +600,11 @@
                                         <div class="btn-icon-back dashboard-icons-setting" style="background-image: url('../img/icons/patients-hover.svg');"></div>
                                         <div>
                                                 <div class="h1-dashboard" style="color: #ff5050;">
-                                                    Delete Account
+                                                    <?php echo t('delete_account'); ?>
                                                     
                                                 </div><br>
                                                 <div class="h3-dashboard"  style="font-size: 15px;">
-                                                    Will Permanently Remove your Account
+                                                    <?php echo t('will_permanently_remove_account'); ?>
                                                 </div>
                                         </div>
                                                 
@@ -570,15 +632,15 @@
             <div id="popup1" class="overlay">
                     <div class="popup">
                     <center>
-                        <h2>Are you sure?</h2>
+                        <h2>'.t('are_you_sure').'</h2>
                         <a class="close" href="settings.php">&times;</a>
                         <div class="content">
-                            You want to delete this record<br>('.substr($nameget,0,40).').
+                            '.t('delete_record').'<br>('.substr($nameget,0,40).').
                             
                         </div>
                         <div style="display: flex;justify-content: center;">
-                        <a href="delete-doctor.php?id='.$id.'" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
-                        <a href="settings.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;No&nbsp;&nbsp;</font></button></a>
+                        <a href="delete-doctor.php?id='.$id.'" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;'.t('yes').'&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
+                        <a href="settings.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;'.t('no').'&nbsp;&nbsp;</font></button></a>
 
                         </div>
                     </center>
@@ -672,7 +734,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="settings.php"><input type="button" value="OK" class="login-btn btn-primary-soft btn" ></a>
+                                    <a href="settings.php"><input type="button" value="'.t('ok').'" class="login-btn btn-primary-soft btn" ></a>
                                 
                                     
                                 </td>
@@ -728,7 +790,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <p style="padding: 0;margin: 0;text-align: left;font-size: 25px;font-weight: 500;">Edit Doctor Details.</p>
+                                            <p style="padding: 0;margin: 0;text-align: left;font-size: 25px;font-weight: 500;">'.t('edit_doctor_details_title').'</p>
                                         Doctor ID : '.$id.' (Auto Generated)<br><br>
                                         </td>
                                     </tr>
@@ -827,9 +889,9 @@
                         
                                     <tr>
                                         <td colspan="2">
-                                            <input type="reset" value="Reset" class="login-btn btn-primary-soft btn" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="reset" value="'.t('reset').'" class="login-btn btn-primary-soft btn" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         
-                                            <input type="submit" value="Save" class="login-btn btn-primary btn">
+                                            <input type="submit" value="'.t('save').'" class="login-btn btn-primary btn">
                                         </td>
                         
                                     </tr>
@@ -858,8 +920,8 @@
                             </div>
                             <div style="display: flex;justify-content: center;">
                             
-                            <a href="settings.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;OK&nbsp;&nbsp;</font></button></a>
-                            <a href="../logout.php" class="non-style-link"><button  class="btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;Log out&nbsp;&nbsp;</font></button></a>
+                            <a href="settings.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;'.t('ok').'&nbsp;&nbsp;</font></button></a>
+                            <a href="../logout.php" class="non-style-link"><button  class="btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;'.t('logout').'&nbsp;&nbsp;</font></button></a>
 
                             </div>
                             <br><br>

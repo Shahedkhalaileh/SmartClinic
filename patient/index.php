@@ -15,6 +15,7 @@
     }
 
     include("../connection.php");
+    include("../translations.php");
     $stmt = $database->prepare("SELECT * FROM patient WHERE pemail=?");
     $stmt->bind_param("s", $useremail);
     $stmt->execute();
@@ -39,13 +40,20 @@
     // Get selected doctor ID from GET parameter or default
     $selected_doctor_id = isset($_GET['doctor_id']) ? intval($_GET['doctor_id']) : 0;
     
-    // Get list of all doctors
+    // Check if patient has any appointments (to show chat button)
+    $has_appointments = $database->query("SELECT COUNT(*) as count 
+                                          FROM appointment a 
+                                          INNER JOIN schedule s ON a.scheduleid = s.scheduleid 
+                                          WHERE a.pid = $userid AND s.scheduledate >= '$today'")->fetch_assoc()['count'] > 0;
+    
+    // Get list of ALL doctors (like old version)
     $doctors_list = $database->query("SELECT docid, docname FROM doctor ORDER BY docname ASC");
     
-    // Keep selected_doctor_id as 0 by default (no doctor selected)
+    // Count total doctors
+    $doctors_count = $doctors_list->num_rows;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -53,8 +61,9 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/language.css">
         
-    <title>Dashboard</title>
+    <title><?php echo t('dashboard'); ?></title>
     <style>
         * {
             margin: 0;
@@ -163,6 +172,24 @@
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .profile-container td[width="30%"] {
+            width: 30% !important;
+            min-width: 30% !important;
+            max-width: 30% !important;
+        }
+        
+        .profile-container img[src*="user.png"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        .profile-container table {
+            width: 100% !important;
         }
         
         .dash-body {
@@ -327,16 +354,19 @@
             transition: all 0.3s ease !important;
         }
         
+        
         #chatButton:hover {
             transform: scale(1.1) !important;
             box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6) !important;
         }
+        
         
         #chatPopup {
             border-radius: 20px !important;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2) !important;
             border: 1px solid rgba(102, 126, 234, 0.2) !important;
         }
+        
         
         #chatHeader {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -510,6 +540,12 @@
             z-index: 999;
         }
         
+        /* Move chat button to left side for Arabic (RTL) */
+        [dir="rtl"] #chatButton {
+            right: auto;
+            left: 25px;
+        }
+        
         #chatButton .notification-badge {
             position: absolute;
             top: -5px;
@@ -525,12 +561,18 @@
             font-size: 11px;
             font-weight: bold;
         }
+        
+        /* Move notification badge to left side for Arabic (RTL) */
+        [dir="rtl"] #chatButton .notification-badge {
+            right: auto;
+            left: -5px;
+        }
 
         #chatPopup {
             display: none;
             position: fixed;
-            bottom: 100px;
-            right: 25px;
+            bottom: 120px;
+            right: 40px;
             width: 380px;
             height: 550px;
             background: white;
@@ -541,39 +583,87 @@
             display: flex;
             flex-direction: column;
         }
+        
+        /* Move chat popup to left side for Arabic (RTL) */
+        [dir="rtl"] #chatPopup {
+            right: auto;
+            left: 40px;
+        }
 
         #chatHeader {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 20px;
+            padding: 20px 25px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+        }
+        
+        #chatHeader > div {
+            flex: 1;
+            min-width: 0;
         }
         
         #chatHeader h3 {
-            margin: 0;
+            margin: 0 0 10px 0;
             font-size: 18px;
             font-weight: 700;
+            white-space: nowrap;
+            color: white !important;
         }
 
         #chatHeader button {
             background: transparent;
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             padding: 0;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: 15px;
+            line-height: 1;
         }
         
         #chatHeader button:hover {
             background: rgba(255, 255, 255, 0.2);
+        }
+        
+        [dir="rtl"] #chatHeader button {
+            margin-left: 0;
+            margin-right: 15px;
+        }
+        
+        /* Book Appointment Button in Chat */
+        #chatPopup .btn-primary,
+        #chatPopup button.btn-primary {
+            display: inline-block !important;
+            width: auto !important;
+            min-width: fit-content !important;
+            padding: 12px 30px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            border-radius: 25px !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: none !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            white-space: nowrap !important;
+        }
+        
+        #chatPopup .btn-primary:hover,
+        #chatPopup button.btn-primary:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
         }
         
         .doctor-selector-chat {
@@ -608,12 +698,44 @@
         #chatBox {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            background: #f8f9fa;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: stretch;
+            min-height: 0;
+        }
+        
+        #chatBox:empty {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        #chatBox .message-container {
+            padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            width: 100%;
+            min-height: 100%;
         }
+        
+        #chatBox .message {
+            margin: 8px 0;
+        }
+        
+        #chatBox .message:first-child {
+            margin-top: 0;
+        }
+        
+        #chatBox .message:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Empty chat design - show beautiful design when no messages */
         
         .message {
             padding: 12px 18px;
@@ -622,60 +744,31 @@
             word-wrap: break-word;
         }
         
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 12px 18px;
-            background: white;
-            border-radius: 18px;
-            max-width: 75px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            align-self: flex-start;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #999;
-            animation: typing 1.4s infinite;
-        }
-        
-        .typing-indicator span:nth-child(1) {
-            animation-delay: 0s;
-        }
-        
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-                opacity: 0.7;
-            }
-            30% {
-                transform: translateY(-10px);
-                opacity: 1;
-            }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            margin-right: 0 !important;
             border-bottom-right-radius: 4px;
         }
         
         .message.received {
-            background: white;
-            color: #333;
-            align-self: flex-start;
+            background: white !important;
+            color: #333 !important;
+            align-self: flex-start !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -687,7 +780,7 @@
         }
         
         .chat-input-container {
-            padding: 15px 20px;
+            padding: 20px 25px;
             background: white;
             border-top: 1px solid rgba(102, 126, 234, 0.1);
             display: flex;
@@ -886,10 +979,57 @@
             }
         }
     </style>
-   
-    
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto !important;
+            left: 15px !important;
+        }
+        
+        /* Ensure language switcher has same style as main page */
+        .language-switcher-header .language-switcher {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="container">
@@ -909,7 +1049,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php" ><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                     </table>
@@ -917,33 +1057,33 @@
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-home menu-active menu-icon-home-active" >
-                        <a href="index.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Home</p></div></a>
+                        <a href="index.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('home'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-doctor">
-                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></a></div>
+                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('all_doctors'); ?></p></a></div>
                     </td>
                 </tr>
                 
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-session">
-                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Bookings</p></a></div>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></a></div>
                     </td>
                 </tr>
                  <tr class="menu-row" >
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">Specialties</p></a></div>
+                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-settings">
-                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></a></div>
+                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></a></div>
                     </td>
                 </tr>
                 
@@ -955,15 +1095,15 @@
                         <tr >
                             
                             <td class="nav-bar" style="width: 50%; vertical-align: middle;">
-                            <p style="font-size: 32px;padding-left:12px;font-weight: 900;margin: 0;line-height: 1.2;">Home</p>
+                            <p style="font-size: 32px;padding-left:12px;font-weight: 900;margin: 0;line-height: 1.2;"><?php echo t('home'); ?></p>
                           
                             </td>
                             <td width="25%" style="text-align: right; vertical-align: middle;">
 
                             </td>
                             <td width="15%" style="text-align: right; vertical-align: middle; padding-right: 10px;">
-                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right; margin-bottom: 5px;">
-                                    Today's Date
+                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>; margin-bottom: 5px;">
+                                    <?php echo t('todays_date'); ?>
                                 </p>
                                 <p class="heading-sub12" style="padding: 0;margin: 0;font-size: 16px;font-weight: 600;color: #667eea;">
                                     <?php echo $today; ?>
@@ -982,17 +1122,17 @@
                     <table class="filter-container doctor-header patient-header" style="border: none;width:95%" border="0" >
                     <tr>
                         <td >
-                            <h3>Welcome!</h3>
+                            <h3><?php echo isArabic() ? 'مرحباً!' : 'Welcome!'; ?></h3>
                             <h1><?php echo $username  ?>.</h1>
-                            <p>Haven't any idea about doctors? no problem let's jumping to 
-                                <a href="doctors.php" class="non-style-link"><b>"All Doctors"</b></a> section or 
-                                <a href="schedule.php" class="non-style-link"><b>"Sessions"</b> </a><br>
-                                Track your past and future appointments history.<br>
+                            <p><?php echo isArabic() ? 'ليس لديك فكرة عن الأطباء؟ لا مشكلة، دعنا ننتقل إلى قسم ' : "Haven't any idea about doctors? no problem let's jumping to "; ?>
+                                <a href="doctors.php" class="non-style-link"><b>"<?php echo t('all_doctors'); ?>"</b></a> <?php echo isArabic() ? 'أو ' : 'section or '; ?>
+                                <a href="schedule.php" class="non-style-link"><b>"<?php echo t('schedule'); ?>"</b> </a><br>
+                                <?php echo isArabic() ? 'تتبع تاريخ مواعيدك السابقة والمستقبلية.' : 'Track your past and future appointments history.'; ?><br>
                             </p>
                             
                             <form action="schedule.php" method="post" style="display: flex">
 
-                                <input type="search" name="search" class="input-text " placeholder="Search Doctor and We will Find The Session Available" list="doctors" style="width:45%;">&nbsp;&nbsp;
+                                <input type="search" name="search" class="input-text " placeholder="<?php echo isArabic() ? 'ابحث عن الطبيب وسنجد الجلسات المتاحة' : 'Search Doctor and We will Find The Session Available'; ?>" list="doctors" style="width:45%;">&nbsp;&nbsp;
                                 
                                 <?php
                                     echo '<datalist id="doctors">';
@@ -1010,7 +1150,7 @@
     ?>
                                 
                            
-                                <input type="Submit" value="Search" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
+                                <input type="Submit" value="<?php echo t('search'); ?>" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
                             
                             <br>
                             <br>
@@ -1037,7 +1177,7 @@
                                         <table class="filter-container" style="border: none;" border="0">
                                             <tr>
                                                 <td colspan="4">
-                                                    <p style="font-size: 20px;font-weight:600;padding-left: 12px;">Status</p>
+                                                    <p style="font-size: 20px;font-weight:600;padding-left: 12px;"><?php echo t('status'); ?></p>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1048,7 +1188,7 @@
                                                                     <?php    echo $doctorrow->num_rows  ?>
                                                                 </div>
                                                                 <div class="h3-dashboard">
-                                                                    All Doctors
+                                                                    <?php echo t('total_doctors'); ?>
                                                                 </div>
                                                         </div>
                                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/doctors-hover.svg'); width: 20px; height: 20px; background-size: contain; background-repeat: no-repeat; flex-shrink: 0; margin-left: 10px;"></div>
@@ -1061,7 +1201,7 @@
                                                                     <?php    echo $patientrow->num_rows  ?>
                                                                 </div>
                                                                 <div class="h3-dashboard">
-                                                                    All Patients
+                                                                    <?php echo t('total_patients'); ?>
                                                                 </div>
                                                         </div>
                                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/patients-hover.svg'); width: 20px; height: 20px; background-size: contain; background-repeat: no-repeat; flex-shrink: 0; margin-left: 10px;"></div>
@@ -1076,7 +1216,7 @@
                                                                     <?php    echo $appointmentrow ->num_rows  ?>
                                                                 </div>
                                                                 <div class="h3-dashboard" >
-                                                                    NewBooking
+                                                                    <?php echo t('total_appointments'); ?>
                                                                 </div>
                                                         </div>
                                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/book-hover.svg'); width: 20px; height: 20px; background-size: contain; background-repeat: no-repeat; flex-shrink: 0; margin-left: 10px;"></div>
@@ -1091,7 +1231,7 @@
                                                                     <?php    echo $schedulerow ->num_rows  ?>
                                                                 </div>
                                                                 <div class="h3-dashboard">
-                                                                    Today Sessions
+                                                                    <?php echo t('today_sessions'); ?>
                                                                 </div>
                                                         </div>
                                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/session-iceblue.svg'); width: 20px; height: 20px; background-size: contain; background-repeat: no-repeat; flex-shrink: 0; margin-left: 10px;"></div>
@@ -1121,7 +1261,7 @@
                                     $has_bookings = ($result && $result->num_rows > 0);
                                     ?>
                                     <div style="margin-bottom: 15px;">
-                                        <p style="font-size: 20px;font-weight:600;padding-left: 0;margin: 0 0 15px 0;" class="anime">Your Upcoming Booking</p>
+                                        <p style="font-size: 20px;font-weight:600;padding-left: 0;margin: 0 0 15px 0;" class="anime"><?php echo isArabic() ? 'حجوزاتك القادمة' : 'Your Upcoming Booking'; ?></p>
                                     </div>
                                     <center>
                                         <?php
@@ -1135,22 +1275,22 @@
                                         <th class="table-headin">
                                                     
                                                 
-                                                    Appoint. Number
+                                                    <?php echo t('appointment_number'); ?>
                                                     
                                                     </th>
                                                 <th class="table-headin">
                                                     
                                                 
-                                                Session Title
+                                                <?php echo t('title'); ?>
                                                 
                                                 </th>
                                                 
                                                 <th class="table-headin">
-                                                    Doctor
+                                                    <?php echo t('doctors'); ?>
                                                 </th>
                                                 <th class="table-headin">
                                                     
-                                                    Sheduled Date & Time
+                                                    <?php echo t('session_date_time'); ?>
                                                     
                                                 </th>
                                                     
@@ -1164,8 +1304,8 @@
                                                     <td colspan="4" style="padding: 20px;">
                                                     <center>
                                                     <img src="../img/notfound.svg" width="20%" style="margin-bottom: 10px;">
-                                                    <p class="heading-main12" style="font-size:16px;color:rgb(49, 49, 49);margin: 10px 0;">Nothing to show here!</p>
-                                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary btn"  style="padding: 10px 25px; font-size: 14px; margin-top: 10px;">&nbsp; Channel a Doctor &nbsp;</button>
+                                                    <p class="heading-main12" style="font-size:16px;color:rgb(49, 49, 49);margin: 10px 0;">'.t('no_results').'</p>
+                                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary btn"  style="padding: 10px 25px; font-size: 14px; margin-top: 10px;">&nbsp; '.t('book_appointment').' &nbsp;</button>
                                                     </a>
                                                     </center>
                                                     </td>
@@ -1231,10 +1371,11 @@
 <div id="chatPopup" style="display:none;">
     <div id="chatHeader">
         <div>
-            <h3>💬 Live Chat</h3>
+            <h3>💬 <?php echo isArabic() ? 'الدردشة المباشرة' : 'Live Chat'; ?></h3>
+            <?php if ($doctors_count > 0): ?>
             <div class="doctor-selector-chat">
                 <select id="doctorSelectChat" class="doctor-select-chat" onchange="changeDoctorChat()">
-                    <option value="0">Select Doctor</option>
+                    <option value="0"><?php echo t('select_doctor'); ?></option>
                     <?php
                     $doctors_list->data_seek(0); // Reset pointer
                     while($doctor = $doctors_list->fetch_assoc()) {
@@ -1244,13 +1385,14 @@
                     ?>
                 </select>
             </div>
+            <?php endif; ?>
         </div>
         <button type="button" id="closeChat">&times;</button>
     </div>
     <div id="chatBox"></div>
     <div class="chat-input-container">
-        <input type="text" id="messageInput" placeholder="Write your message...">
-        <button type="button" class="send-btn-chat" onclick="sendChatMessage(event)">Send</button>
+        <input type="text" id="messageInput" placeholder="<?php echo t('write_your_message'); ?>">
+        <button type="button" class="send-btn-chat" onclick="sendChatMessage(event)"><?php echo t('send'); ?></button>
     </div>
 </div>
 
@@ -1261,25 +1403,21 @@ const closeChat = document.getElementById('closeChat');
 const sender = <?php echo $userid; ?>;
 let receiver = <?php echo $selected_doctor_id; ?>;
 
-closeChat.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    chatPopup.style.display = 'none';
-    if (chatUpdateInterval) {
-        clearInterval(chatUpdateInterval);
-        chatUpdateInterval = null;
-    }
-    return false;
-});
+if (closeChat) {
+    closeChat.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        chatPopup.style.display = 'none';
+        if (chatUpdateInterval) {
+            clearInterval(chatUpdateInterval);
+            chatUpdateInterval = null;
+        }
+        return false;
+    });
+}
 
 function changeDoctorChat() {
     const select = document.getElementById('doctorSelectChat');
-    setTypingStatus(false);
-    // Stop typing update interval
-    if (typingUpdateInterval) {
-        clearInterval(typingUpdateInterval);
-        typingUpdateInterval = null;
-    }
     receiver = parseInt(select.value);
     if (receiver > 0) {
         loadChatMessages();
@@ -1295,16 +1433,44 @@ function changeDoctorChat() {
         // Update all indicators
         updateUnreadIndicators();
     } else {
-        document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Please select a doctor to start chatting</div>';
+        showEmptyChatDesign();
     }
 }
 
 let lastMessageCount = 0;
 let isScrolledToBottom = true;
 
+function showEmptyChatDesign() {
+    const chatBox = document.getElementById('chatBox');
+    <?php if ($doctors_count == 0): ?>
+    chatBox.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 100%; padding: 40px 25px; text-align: center;">
+            <div style="background: white; border-radius: 20px; padding: 35px 25px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); max-width: 320px; width: 100%; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+                <div style="font-size: 56px; margin-bottom: 15px; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 6px 12px rgba(102, 126, 234, 0.3)); position: relative; z-index: 1;">📅</div>
+                <p style="font-size: 16px; font-weight: 800; color: #667eea; margin-bottom: 20px; line-height: 1.6; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);"><?php echo t('you_must_book_to_chat'); ?></p>
+                <a href="schedule.php" class="non-style-link" style="position: relative; z-index: 1; display: inline-block;">
+                    <button class="btn-primary" style="box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4), 0 4px 10px rgba(118, 75, 162, 0.2); transform: scale(1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 15px; padding: 14px 35px;">
+                        <?php echo t('book_appointment'); ?>
+                    </button>
+                </a>
+            </div>
+        </div>
+    `;
+    <?php else: ?>
+    chatBox.innerHTML = '';
+    <?php endif; ?>
+}
+
 function loadChatMessages() {
     if (receiver <= 0) {
-        document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Please select a doctor to start chatting</div>';
+        <?php if ($doctors_count == 0): ?>
+        showEmptyChatDesign();
+        <?php else: ?>
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = '';
+        <?php endif; ?>
         return;
     }
     
@@ -1334,8 +1500,10 @@ function markAsRead() {
     if (receiver <= 0) return;
     fetch(`mark_read.php?sender=${receiver}&receiver=${sender}`)
         .then(() => {
-            // Update notifications after marking as read
-            checkChatNotifications();
+            // Update notifications after marking as read - use setTimeout to ensure DB update completes
+            setTimeout(() => {
+                checkChatNotifications();
+            }, 300);
             // Remove unread indicator from selected doctor
             const select = document.getElementById('doctorSelectChat');
             if (select) {
@@ -1346,19 +1514,52 @@ function markAsRead() {
                     selectedOption.textContent = originalText;
                 }
             }
+        })
+        .catch(err => {
+            console.error('Error marking as read:', err);
         });
 }
 
 function checkChatNotifications() {
+    const badge = document.getElementById('chatNotificationBadge');
+    if (!badge) return;
+    
+    // Hide badge by default
+    badge.style.display = 'none';
+    
+    if (!sender || sender <= 0) {
+        return;
+    }
+    
     fetch(`check_notifications.php?user_id=${sender}&user_type=patient`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return res.json();
+        })
         .then(data => {
-            const badge = document.getElementById('chatNotificationBadge');
-            if (data.count > 0) {
-                badge.textContent = data.count > 99 ? '99+' : data.count;
+            if (!badge) return;
+            
+            // Ensure count is a valid number
+            const count = parseInt(data.count) || 0;
+            
+            // Only show badge if count is greater than 0
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count.toString();
                 badge.style.display = 'flex';
             } else {
+                // Explicitly hide badge when count is 0
                 badge.style.display = 'none';
+                badge.textContent = '0';
+            }
+        })
+        .catch(err => {
+            console.error('Error checking notifications:', err);
+            // في حالة الخطأ، أخفي الإشعار
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
             }
         });
 }
@@ -1399,8 +1600,13 @@ function sendChatMessage(e) {
         e.stopPropagation();
     }
     
+    <?php if ($doctors_count == 0): ?>
+    alert('<?php echo t("you_must_book_to_chat"); ?>');
+    return false;
+    <?php endif; ?>
+    
     if (receiver <= 0) {
-        alert('Please select a doctor first');
+        alert('<?php echo t("please_select_doctor_first"); ?>');
         return false;
     }
     
@@ -1417,18 +1623,21 @@ function sendChatMessage(e) {
     fetch('send_message.php', {
         method: 'POST',
         body: formData
-    }).then(() => {
-        document.getElementById('messageInput').value = '';
-        setTypingStatus(false);
-        // Stop typing update interval
-        if (typingUpdateInterval) {
-            clearInterval(typingUpdateInterval);
-            typingUpdateInterval = null;
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('messageInput').value = '';
+            loadChatMessages();
+            checkChatNotifications();
+        } else {
+            console.error('Error sending message:', data.message);
+            alert('Error sending message: ' + (data.message || 'Please try again.'));
         }
-        loadChatMessages();
-        checkChatNotifications();
-    }).catch(err => {
+    })
+    .catch(err => {
         console.error('Error sending message:', err);
+        alert('Error sending message. Please try again.');
     });
     
     return false;
@@ -1437,19 +1646,28 @@ function sendChatMessage(e) {
 // Update messages every 2 seconds when popup is open
 let chatUpdateInterval = null;
 
-chatBtn.addEventListener('click', () => {
+if (chatBtn && chatPopup) {
+    chatBtn.addEventListener('click', () => {
     const isOpen = chatPopup.style.display === 'flex';
     chatPopup.style.display = isOpen ? 'none' : 'flex';
     
     if (!isOpen) {
-        // Open chat
+        // Open chat - immediately hide notification badge
+        const badge = document.getElementById('chatNotificationBadge');
+        if (badge) {
+            badge.style.display = 'none';
+        }
+        
         loadChatMessages();
-        // Mark messages as read when opening chat
+        // Mark messages as read when opening chat and update notifications
         if (receiver > 0) {
             markAsRead();
+        } else {
+            // Update notifications even if no receiver selected
+            setTimeout(() => {
+                checkChatNotifications();
+            }, 200);
         }
-        // Update notifications immediately
-        checkChatNotifications();
         // Update unread indicators
         updateUnreadIndicators();
         // Start interval
@@ -1459,37 +1677,23 @@ chatBtn.addEventListener('click', () => {
                 loadChatMessages();
                 if (receiver > 0) {
                     markAsRead();
+                } else {
+                    // Update notifications periodically even if no receiver selected
+                    checkChatNotifications();
                 }
                 // Update unread indicators periodically
                 updateUnreadIndicators();
             }
         }, 3000);
-        // Start typing check interval
-        if (typingCheckInterval) clearInterval(typingCheckInterval);
-        typingCheckInterval = setInterval(checkTypingStatus, 1000);
     } else {
         // Close chat
         if (chatUpdateInterval) {
             clearInterval(chatUpdateInterval);
             chatUpdateInterval = null;
         }
-        // Stop typing check interval
-        if (typingCheckInterval) {
-            clearInterval(typingCheckInterval);
-            typingCheckInterval = null;
-        }
-        // Stop typing update interval
-        if (typingUpdateInterval) {
-            clearInterval(typingUpdateInterval);
-            typingUpdateInterval = null;
-        }
-        // Remove typing indicator when closing
-        const typingIndicator = document.getElementById('typingIndicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
     }
-});
+    });
+}
 
 // Check notifications every 3 seconds
 setInterval(checkChatNotifications, 3000);
@@ -1497,113 +1701,16 @@ setInterval(checkChatNotifications, 3000);
 // Initial load - don't load messages if no doctor selected
 checkChatNotifications();
 
-// Typing indicator
-let typingTimeout = null;
-let isTyping = false;
-let typingCheckInterval = null;
-let typingUpdateInterval = null;
-
-function setTypingStatus(typing) {
-    if (receiver <= 0) return;
-    
-    if (typing && !isTyping) {
-        isTyping = true;
-        const formData = new FormData();
-        formData.append('sender', sender);
-        formData.append('receiver', receiver);
-        formData.append('is_typing', 1);
-        fetch('set_typing.php', {
-            method: 'POST',
-            body: formData
-        });
-    } else if (!typing && isTyping) {
-        isTyping = false;
-        const formData = new FormData();
-        formData.append('sender', sender);
-        formData.append('receiver', receiver);
-        formData.append('is_typing', 0);
-        fetch('set_typing.php', {
-            method: 'POST',
-            body: formData
-        });
-    }
-}
-
-function checkTypingStatus() {
-    if (receiver <= 0 || chatPopup.style.display !== 'flex') return;
-    
-    fetch(`check_typing.php?sender=${sender}&receiver=${receiver}`)
-        .then(res => res.json())
-        .then(data => {
-            const chatBox = document.getElementById('chatBox');
-            let typingIndicator = document.getElementById('typingIndicator');
-            
-            if (data.is_typing) {
-                if (!typingIndicator) {
-                    typingIndicator = document.createElement('div');
-                    typingIndicator.id = 'typingIndicator';
-                    typingIndicator.className = 'typing-indicator';
-                    typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-                    chatBox.appendChild(typingIndicator);
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }
-            } else {
-                if (typingIndicator) {
-                    typingIndicator.remove();
-                }
-            }
-        });
-}
-
-// Monitor typing in input field
 const messageInput = document.getElementById('messageInput');
-
-function updateTypingStatus() {
-    if (receiver <= 0) return;
-    
-    const msg = messageInput.value.trim();
-    
-    // If there's text, show typing indicator
-    if (msg.length > 0) {
-        setTypingStatus(true);
-        // Start continuous update interval
-        if (!typingUpdateInterval) {
-            typingUpdateInterval = setInterval(() => {
-                const currentMsg = messageInput.value.trim();
-                if (currentMsg.length > 0 && receiver > 0) {
-                    setTypingStatus(true);
-                } else {
-                    setTypingStatus(false);
-                    if (typingUpdateInterval) {
-                        clearInterval(typingUpdateInterval);
-                        typingUpdateInterval = null;
-                    }
-                }
-            }, 2000); // Update every 2 seconds
+if (messageInput) {
+    // Send message on Enter key
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendChatMessage(e);
         }
-    } else {
-        // If input is empty, hide typing indicator
-        setTypingStatus(false);
-        // Stop update interval
-        if (typingUpdateInterval) {
-            clearInterval(typingUpdateInterval);
-            typingUpdateInterval = null;
-        }
-    }
+    });
 }
-
-messageInput.addEventListener('input', updateTypingStatus);
-messageInput.addEventListener('keyup', updateTypingStatus);
-messageInput.addEventListener('keydown', updateTypingStatus);
-
-// Send message on Enter key
-messageInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        setTypingStatus(false);
-        sendChatMessage(e);
-    }
-});
 
 // Toggle mobile menu
 function toggleMenu() {

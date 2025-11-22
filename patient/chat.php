@@ -33,7 +33,7 @@
     }
     
     // Get current doctor name
-    $current_doctor_name = "Select Doctor";
+    $current_doctor_name = "اختر طبيب";
     if ($receiver_id > 0) {
         $doctor_info = $database->query("SELECT docname FROM doctor WHERE docid = $receiver_id");
         if ($doctor_info->num_rows > 0) {
@@ -42,7 +42,7 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
-    <title>Live Chat</title>
+    <title>الدردشة المباشرة</title>
     <style>
         * {
             margin: 0;
@@ -90,18 +90,18 @@
             position: relative !important;
             flex-shrink: 0 !important;
             z-index: 100 !important;
-            margin: 20px 0 0 20px !important;
+            margin: 20px 20px 0 0 !important;
             padding: 0 !important;
             border-radius: 25px 25px 0 0 !important;
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-            border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border-left: 1px solid rgba(102, 126, 234, 0.1) !important;
         }
         
         .dash-body {
             flex: 1 !important;
-            margin: 20px 20px 0 15px !important;
+            margin: 20px 15px 0 20px !important;
             padding: 30px !important;
             overflow-y: auto !important;
             height: 100vh !important;
@@ -124,7 +124,7 @@
         
         .menu-btn:hover {
             background: rgba(102, 126, 234, 0.1) !important;
-            transform: translateX(5px) !important;
+            transform: translateX(-5px) !important;
         }
         
         .menu-active {
@@ -232,18 +232,21 @@
         
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -8px;
+            left: -8px;
             background: #ff4444;
             color: white;
             border-radius: 50%;
-            width: 20px;
+            min-width: 20px;
             height: 20px;
+            padding: 0 5px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 11px;
             font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         #chatBox {
@@ -270,16 +273,20 @@
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            margin-right: 0 !important;
             border-bottom-right-radius: 4px;
         }
         
         .message.received {
-            background: white;
-            color: #333;
-            align-self: flex-start;
+            background: white !important;
+            color: #333 !important;
+            align-self: flex-start !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -333,7 +340,7 @@
         .back-btn {
             position: absolute;
             top: 30px;
-            left: 30px;
+            right: 30px;
             padding: 12px 25px;
             background: rgba(255, 255, 255, 0.9);
             border: none;
@@ -351,7 +358,7 @@
         
         .back-btn:hover {
             background: white;
-            transform: translateX(-5px);
+            transform: translateX(5px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
     </style>
@@ -374,52 +381,57 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php"><input type="button" value="تسجيل الخروج" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr class="menu-row">
+                    <td class="menu-btn menu-icon-appoinment">
+                        <a href="chat.php" class="non-style-link-menu menu-active"><div><p class="menu-text">💬 الدردشة المباشرة</p></div></a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
                     <td class="menu-btn menu-icon-home">
-                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Home</p></div></a>
+                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">الرئيسية</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-doctor">
-                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></div></a>
+                        <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">جميع الأطباء</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-session">
-                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">الجلسات المجدولة</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Bookings</p></div></a>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">حجوزاتي</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">Specialties</p></div></a>
+                        <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">التخصصات</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-settings">
-                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></div></a>
+                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">الإعدادات</p></div></a>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="dash-body">
-            <a href="index.php" class="back-btn">← Back</a>
+            <a href="index.php" class="back-btn">← رجوع</a>
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>💬 Live Chat</h2>
-                    <div class="doctor-selector">
+                    <h2>💬 الدردشة المباشرة</h2>
+                    <div class="doctor-selector" style="position: relative;">
                         <select id="doctorSelect" class="doctor-select" onchange="changeDoctor()">
-                            <option value="0">Select Doctor</option>
+                            <option value="0">اختر طبيب</option>
                             <?php
                             $doctors_list->data_seek(0); // Reset pointer
                             while($doctor = $doctors_list->fetch_assoc()) {
@@ -433,8 +445,8 @@
                 </div>
                 <div id="chatBox"></div>
                 <div class="chat-input-container">
-                    <input type="text" id="messageInput" placeholder="Write your message...">
-                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                    <input type="text" id="messageInput" placeholder="اكتب رسالتك...">
+                    <button class="send-btn" onclick="sendMessage()">إرسال</button>
                 </div>
             </div>
         </div>
@@ -454,7 +466,7 @@
 
         function loadMessages() {
             if (receiver <= 0) {
-                document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Please select a doctor to start chatting</div>';
+                document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">الرجاء اختيار طبيب لبدء المحادثة</div>';
                 return;
             }
             
@@ -463,6 +475,9 @@
                 .then(data => {
                     document.getElementById('chatBox').innerHTML = data;
                     document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+                })
+                .catch((error) => {
+                    console.error('Error loading messages:', error);
                 });
         }
 
@@ -490,7 +505,7 @@
 
         function sendMessage() {
             if (receiver <= 0) {
-                alert('Please select a doctor first');
+                alert('الرجاء اختيار طبيب أولاً');
                 return;
             }
             
@@ -507,15 +522,27 @@
             fetch('send_message.php', {
                 method: 'POST',
                 body: formData
-            }).then(() => {
-                document.getElementById('messageInput').value = '';
-                loadMessages();
-                checkNotifications();
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('messageInput').value = '';
+                    loadMessages();
+                    checkNotifications();
+                } else {
+                    console.error('Error sending message:', data.message);
+                    alert('خطأ في إرسال الرسالة: ' + (data.message || 'الرجاء المحاولة مرة أخرى.'));
+                }
+            })
+            .catch((error) => {
+                console.error('Error sending message:', error);
+                alert('خطأ في إرسال الرسالة. الرجاء المحاولة مرة أخرى.');
             });
         }
         
         // Send message on Enter key
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
             }

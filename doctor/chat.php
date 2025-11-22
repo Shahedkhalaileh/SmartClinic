@@ -22,31 +22,52 @@
     // Get selected patient ID from GET parameter
     $receiver_id = isset($_GET['patient_id']) ? intval($_GET['patient_id']) : 0;
     
-    // Get list of all patients who have messaged this doctor
-    $patients_list = $database->query("SELECT DISTINCT p.pid, p.pname 
-                                       FROM patient p 
-                                       INNER JOIN messages m ON p.pid = m.sender_id 
-                                       WHERE m.receiver_id = $doctorid 
-                                       ORDER BY p.pname ASC");
-    
-    // If no patient selected, get first patient or set to 0
-    if ($receiver_id == 0 && $patients_list->num_rows > 0) {
-        $first_patient = $patients_list->fetch_assoc();
-        $receiver_id = $first_patient['pid'];
-        $patients_list->data_seek(0); // Reset pointer
+    // Get list of all patients (both those who have messaged and all patients)
+    $doctorid_int = intval($doctorid); // Sanitize to prevent SQL injection
+    $patients_query = "SELECT DISTINCT p.pid, p.pname 
+                       FROM patient p 
+                       LEFT JOIN messages m ON ((p.pid = m.sender_id AND m.receiver_id = ?)
+                          OR (p.pid = m.receiver_id AND m.sender_id = ?))
+                       ORDER BY p.pname ASC";
+    $stmt_patients = $database->prepare($patients_query);
+    if ($stmt_patients) {
+        $stmt_patients->bind_param("ii", $doctorid_int, $doctorid_int);
+        $stmt_patients->execute();
+        $patients_list = $stmt_patients->get_result();
+        
+        // Store all patients in an array so we can use it later
+        $patients_array = array();
+        while ($patient_row = $patients_list->fetch_assoc()) {
+            $patients_array[] = $patient_row;
+        }
+        $stmt_patients->close();
+        
+        // If no patient selected, get first patient or set to 0
+        if ($receiver_id == 0 && count($patients_array) > 0) {
+            $receiver_id = $patients_array[0]['pid'];
+        }
+    } else {
+        $patients_array = array();
     }
     
     // Get current patient name
-    $current_patient_name = "Select Patient";
+    $current_patient_name = "اختر مريض";
     if ($receiver_id > 0) {
-        $patient_info = $database->query("SELECT pname FROM patient WHERE pid = $receiver_id");
-        if ($patient_info->num_rows > 0) {
-            $current_patient_name = $patient_info->fetch_assoc()['pname'];
+        $receiver_id_int = intval($receiver_id);
+        $stmt_name = $database->prepare("SELECT pname FROM patient WHERE pid = ?");
+        if ($stmt_name) {
+            $stmt_name->bind_param("i", $receiver_id_int);
+            $stmt_name->execute();
+            $patient_info = $stmt_name->get_result();
+            if ($patient_info->num_rows > 0) {
+                $current_patient_name = $patient_info->fetch_assoc()['pname'];
+            }
+            $stmt_name->close();
         }
     }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -54,7 +75,7 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
-    <title>Live Chat - Doctor</title>
+    <title>الدردشة المباشرة - الطبيب</title>
     <style>
         * {
             margin: 0;
@@ -94,18 +115,18 @@
             position: relative !important;
             flex-shrink: 0 !important;
             z-index: 100 !important;
-            margin: 20px 0 0 20px !important;
+            margin: 20px 20px 0 0 !important;
             padding: 0 !important;
             border-radius: 25px 25px 0 0 !important;
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-            border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border-left: 1px solid rgba(102, 126, 234, 0.1) !important;
         }
         
         .dash-body {
             flex: 1 !important;
-            margin: 20px 20px 0 15px !important;
+            margin: 20px 15px 0 20px !important;
             padding: 30px !important;
             overflow-y: auto !important;
             height: 100vh !important;
@@ -176,7 +197,7 @@
         .notification-badge {
             position: absolute;
             top: -5px;
-            right: -5px;
+            left: -5px;
             background: #ff4444;
             color: white;
             border-radius: 50%;
@@ -213,16 +234,20 @@
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            margin-right: 0 !important;
             border-bottom-right-radius: 4px;
         }
         
         .message.received {
-            background: white;
-            color: #333;
-            align-self: flex-start;
+            background: white !important;
+            color: #333 !important;
+            align-self: flex-start !important;
+            margin-left: 0 !important;
+            margin-right: auto !important;
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -268,6 +293,11 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
+        
+        .logout-btn {
+            width: 100% !important;
+            margin-top: 15px !important;
+        }
     </style>
 </head>
 <body>
@@ -288,15 +318,20 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php"><input type="button" value="تسجيل الخروج" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr class="menu-row">
+                    <td class="menu-btn menu-icon-appoinment menu-active">
+                        <a href="chat.php" class="non-style-link-menu"><div><p class="menu-text">💬 الدردشة المباشرة</p></div></a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
                     <td class="menu-btn menu-icon-home">
-                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></div></a>
+                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">لوحة التحكم</p></div></a>
                     </td>
                 </tr>
             </table>
@@ -304,15 +339,17 @@
         <div class="dash-body">
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>💬 Live Chat with Patients</h2>
+                    <h2>💬 الدردشة المباشرة مع المرضى</h2>
                     <div class="patient-selector">
                         <select id="patientSelect" class="patient-select" onchange="changePatient()">
-                            <option value="0">Select Patient</option>
+                            <option value="0">اختر مريض</option>
                             <?php
-                            $patients_list->data_seek(0); // Reset pointer
-                            while($patient = $patients_list->fetch_assoc()) {
-                                $selected = ($patient['pid'] == $receiver_id) ? 'selected' : '';
-                                echo "<option value='{$patient['pid']}' $selected>{$patient['pname']}</option>";
+                            if (isset($patients_array) && count($patients_array) > 0) {
+                                foreach($patients_array as $patient) {
+                                    $selected = ($patient['pid'] == $receiver_id) ? 'selected' : '';
+                                    $patient_name = htmlspecialchars($patient['pname'], ENT_QUOTES, 'UTF-8');
+                                    echo "<option value='{$patient['pid']}' $selected>$patient_name</option>";
+                                }
                             }
                             ?>
                         </select>
@@ -321,8 +358,8 @@
                 </div>
                 <div id="chatBox"></div>
                 <div class="chat-input-container">
-                    <input type="text" id="messageInput" placeholder="Write your message...">
-                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                    <input type="text" id="messageInput" placeholder="اكتب رسالتك...">
+                    <button class="send-btn" onclick="sendMessage()">إرسال</button>
                 </div>
             </div>
         </div>
@@ -342,7 +379,7 @@
 
         function loadMessages() {
             if (receiver <= 0) {
-                document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Please select a patient to view messages</div>';
+                document.getElementById('chatBox').innerHTML = '<div style="text-align:center;padding:40px;color:#999;">الرجاء اختيار مريض لعرض الرسائل</div>';
                 return;
             }
             
@@ -353,6 +390,9 @@
                     document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
                     // Mark messages as read
                     markAsRead();
+                })
+                .catch((error) => {
+                    console.error('Error loading messages:', error);
                 });
         }
 
@@ -383,7 +423,7 @@
 
         function sendMessage() {
             if (receiver <= 0) {
-                alert('Please select a patient first');
+                alert('الرجاء اختيار مريض أولاً');
                 return;
             }
             
@@ -400,9 +440,21 @@
             fetch('send_message.php', {
                 method: 'POST',
                 body: formData
-            }).then(() => {
-                document.getElementById('messageInput').value = '';
-                loadMessages();
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('messageInput').value = '';
+                    loadMessages();
+                    checkNotifications();
+                } else {
+                    console.error('Error sending message:', data.message);
+                    alert('خطأ في إرسال الرسالة: ' + (data.message || 'الرجاء المحاولة مرة أخرى.'));
+                }
+            })
+            .catch((error) => {
+                console.error('Error sending message:', error);
+                alert('خطأ في إرسال الرسالة. الرجاء المحاولة مرة أخرى.');
             });
         }
         

@@ -12,6 +12,7 @@
     }
 
     include("../connection.php");
+    include("../translations.php");
     
     date_default_timezone_set('Asia/Amman');
     $today = date('Y-m-d');
@@ -21,7 +22,7 @@
     $schedulerow = $database->query("select  * from  schedule where scheduledate='$today';");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,11 +32,117 @@
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/admin/common.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/language.css">
         
-    <title>Dashboard</title>
+    <title><?php echo t('dashboard'); ?></title>
     <!-- All common styles are now in CSS files -->
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: auto;
+            left: 15px;
+        }
+        
+        /* Ensure language switcher has same style as main page */
+        .language-switcher-header .language-switcher {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .profile-title {
+            color: #333 !important;
+            font-weight: 600 !important;
+        }
+        
+        .profile-subtitle {
+            color: #666 !important;
+            font-weight: 400 !important;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu {
+            border-right: none !important;
+            border-left: 1px solid rgba(102, 126, 234, 0.1) !important;
+            box-shadow: -4px 0 30px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        [dir="rtl"] .menu-active {
+            border-right: none !important;
+            border-left: 7px solid var(--primarycolor) !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Dashboard adjustments */
+        [dir="rtl"] .dashboard-items {
+            flex-direction: row-reverse !important;
+        }
+        
+        [dir="rtl"] .dashboard-icons {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        
+        [dir="rtl"] .header-search {
+            flex-direction: row-reverse !important;
+        }
+        
+        [dir="rtl"] .header-search::before {
+            left: auto !important;
+            right: 15px !important;
+        }
+        
+        [dir="rtl"] .header-search input[type="search"] {
+            padding-left: 18px !important;
+            padding-right: 45px !important;
+        }
+        
+        [dir="rtl"] .filter-container p {
+            text-align: right !important;
+            padding-left: 0 !important;
+            padding-right: 12px !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+        
+        .logout-btn {
+            width: 100% !important;
+            margin-top: 15px !important;
+        }
+    </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="container">
@@ -49,13 +156,13 @@
                                     <img src="../img/user.png" alt="" width="100%" style="border-radius:50%">
                                 </td>
                                 <td style="padding:0px;margin:0px;">
-                                    <p class="profile-title">Administrator</p>
+                                    <p class="profile-title"><?php echo t('administrator'); ?></p>
                                     <p class="profile-subtitle">admin@gmail.com</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php" ><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                     </table>
@@ -63,27 +170,27 @@
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active" >
-                        <a href="index.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Dashboard</p></div></a>
+                        <a href="index.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-doctor ">
-                        <a href="doctors.php" class="non-style-link-menu "><div><p class="menu-text">Doctors</p></a></div>
+                        <a href="doctors.php" class="non-style-link-menu "><div><p class="menu-text"><?php echo t('doctors'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-schedule">
-                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Schedule</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">Appointment</p></a></div>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('appointment'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-patient">
-                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text">Patients</p></a></div>
+                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('patients'); ?></p></a></div>
                     </td>
                 </tr>
             </table>
@@ -97,7 +204,7 @@
                                 
                                 <form action="doctors.php" method="post" class="header-search">
         
-                                    <input type="search" name="search" class="input-text header-searchbar" placeholder="Search Doctor name or Email" list="doctors" style="flex: 1;min-width: 200px;">
+                                    <input type="search" name="search" class="input-text header-searchbar" placeholder="<?php echo t('search_doctor'); ?>" list="doctors" style="flex: 1;min-width: 200px;">
                                     
                                     <?php
                                         echo '<datalist id="doctors">';
@@ -115,14 +222,14 @@
                                     ?>
                                     
                                
-                                    <input type="Submit" value="Search" class="login-btn btn-primary-soft btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;white-space: nowrap;">
+                                    <input type="Submit" value="<?php echo t('search'); ?>" class="login-btn btn-primary-soft btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;white-space: nowrap;">
                                 
                                 </form>
                                 
                             </td>
                             <td width="15%">
-                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
-                                    Today's Date
+                                <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>;">
+                                    <?php echo t('todays_date'); ?>
                                 </p>
                                 <p class="heading-sub12" style="padding: 0;margin: 0;">
                                     <?php echo $today; ?>
@@ -141,7 +248,7 @@
                         <table class="filter-container" style="border: none;" border="0">
                             <tr>
                                 <td colspan="4">
-                                    <p style="font-size: 20px;font-weight:600;padding-left: 12px;">Status</p>
+                                    <p style="font-size: 20px;font-weight:600;padding-left: 12px;"><?php echo t('status'); ?></p>
                                 </td>
                             </tr>
                             <tr>
@@ -152,7 +259,7 @@
                                                     <?php    echo $doctorrow->num_rows  ?>
                                                 </div><br>
                                                 <div class="h3-dashboard">
-                                                    Doctors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <?php echo t('total_doctors'); ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </div>
                                         </div>
                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/doctors-hover.svg');"></div>
@@ -165,7 +272,7 @@
                                                     <?php    echo $patientrow->num_rows  ?>
                                                 </div><br>
                                                 <div class="h3-dashboard">
-                                                    Patients &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <?php echo t('total_patients'); ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </div>
                                         </div>
                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/patients-hover.svg');"></div>
@@ -178,7 +285,7 @@
                                                     <?php    echo $appointmentrow ->num_rows  ?>
                                                 </div><br>
                                                 <div class="h3-dashboard" >
-                                                    NewBooking &nbsp;&nbsp;
+                                                    <?php echo t('total_appointments'); ?> &nbsp;&nbsp;
                                                 </div>
                                         </div>
                                                 <div class="btn-icon-back dashboard-icons" style="margin-left: 0px;background-image: url('../img/icons/book-hover.svg');"></div>
@@ -191,7 +298,7 @@
                                                     <?php    echo $schedulerow ->num_rows  ?>
                                                 </div><br>
                                                 <div class="h3-dashboard">
-                                                    Today Sessions
+                                                    <?php echo t('today_sessions'); ?>
                                                 </div>
                                         </div>
                                                 <div class="btn-icon-back dashboard-icons" style="background-image: url('../img/icons/session-iceblue.svg');"></div>
@@ -225,22 +332,22 @@
                                         <tr>    
                                                 <th class="table-headin" style="font-size: 12px;">
                                                         
-                                                    Appointment number
+                                                    <?php echo t('appointment_number'); ?>
                                                     
                                                 </th>
                                                 <th class="table-headin">
-                                                    Patient name
-                                                </th>
-                                                <th class="table-headin">
-                                                    
-                                                
-                                                    Doctor
-                                                    
+                                                    <?php echo t('patient_name'); ?>
                                                 </th>
                                                 <th class="table-headin">
                                                     
                                                 
-                                                    Session
+                                                    <?php echo t('doctors'); ?>
+                                                    
+                                                </th>
+                                                <th class="table-headin">
+                                                    
+                                                
+                                                    <?php echo t('session'); ?>
                                                     
                                                 </th>
                                             </tr>
@@ -261,8 +368,8 @@
                                                     <img src="../img/notfound.svg" width="25%">
                                                     
                                                     <br>
-                                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                                    <a class="non-style-link" href="appointment.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; Show all Appointments &nbsp;</font></button>
+                                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_sessions_found').'</p>
+                                                    <a class="non-style-link" href="appointment.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('all_appointments').' &nbsp;</font></button>
                                                     </a>
                                                     </center>
                                                     <br><br><br><br>
@@ -326,16 +433,16 @@
                                                 <th class="table-headin">
                                                     
                                                 
-                                                Session Title
+                                                <?php echo t('title'); ?>
                                                 
                                                 </th>
                                                 
                                                 <th class="table-headin">
-                                                    Doctor
+                                                    <?php echo t('doctors'); ?>
                                                 </th>
                                                 <th class="table-headin">
                                                     
-                                                    Sheduled Date & Time
+                                                    <?php echo t('session_date_time'); ?>
                                                     
                                                 </th>
                                                     
@@ -356,8 +463,8 @@
                                                     <img src="../img/notfound.svg" width="25%">
                                                     
                                                     <br>
-                                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; Show all Sessions &nbsp;</font></button>
+                                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_sessions_found').'</p>
+                                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('show_all_sessions').' &nbsp;</font></button>
                                                     </a>
                                                     </center>
                                                     <br><br><br><br>
@@ -404,12 +511,12 @@
                             <tr>
                                 <td>
                                     <center>
-                                        <a href="appointment.php" class="non-style-link"><button class="btn-primary btn" style="width:85%">Show all Appointments</button></a>
+                                        <a href="appointment.php" class="non-style-link"><button class="btn-primary btn" style="width:85%"><?php echo t('all_appointments'); ?></button></a>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-                                        <a href="schedule.php" class="non-style-link"><button class="btn-primary btn" style="width:85%">Show all Sessions</button></a>
+                                        <a href="schedule.php" class="non-style-link"><button class="btn-primary btn" style="width:85%"><?php echo t('show_all_sessions'); ?></button></a>
                                     </center>
                                 </td>
                             </tr>

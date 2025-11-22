@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 include '../connection.php';
 
 // Check if messages table exists, if not create it
@@ -21,25 +22,56 @@ if ($table_check->num_rows == 0) {
     $database->query($create_table);
 }
 
-$sender = $_POST['sender'];
-$receiver = $_POST['receiver'];
-$message = trim($_POST['message']);
+$sender = isset($_POST['sender']) ? intval($_POST['sender']) : 0;
+$receiver = isset($_POST['receiver']) ? intval($_POST['receiver']) : 0;
+$message = isset($_POST['message']) ? trim($_POST['message']) : '';
 $sender_type = isset($_POST['sender_type']) ? $_POST['sender_type'] : 'patient';
 $receiver_type = isset($_POST['receiver_type']) ? $_POST['receiver_type'] : 'doctor';
 
-if (!empty($message) && $receiver > 0) {
-  // Check if new columns exist
-  $check_columns = $database->query("SHOW COLUMNS FROM messages LIKE 'sender_type'");
-  
-  if ($check_columns->num_rows > 0) {
+// Validate inputs
+if (empty($message)) {
+    echo json_encode(['success' => false, 'message' => 'Message cannot be empty']);
+    exit;
+}
+
+if ($receiver <= 0 || $sender <= 0) {
+    echo json_encode(['success' => false, 'message' => 'Invalid sender or receiver ID']);
+    exit;
+}
+
+// Check if new columns exist
+$check_columns = $database->query("SHOW COLUMNS FROM messages LIKE 'sender_type'");
+$has_columns = $check_columns->num_rows > 0;
+
+if ($has_columns) {
     // Use new columns
     $stmt = $database->prepare("INSERT INTO messages (sender_id, receiver_id, message, sender_type, receiver_type, is_read) VALUES (?, ?, ?, ?, ?, 0)");
-    $stmt->bind_param("iisss", $sender, $receiver, $message, $sender_type, $receiver_type);
-  } else {
+    if ($stmt) {
+        $stmt->bind_param("iisss", $sender, $receiver, $message, $sender_type, $receiver_type);
+        if ($stmt->execute()) {
+            $stmt->close();
+            echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
+        } else {
+            $stmt->close();
+            echo json_encode(['success' => false, 'message' => 'Error executing query: ' . $database->error]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error preparing statement: ' . $database->error]);
+    }
+} else {
     // Use basic insert without new columns
     $stmt = $database->prepare("INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $sender, $receiver, $message);
-  }
-  $stmt->execute();
+    if ($stmt) {
+        $stmt->bind_param("iis", $sender, $receiver, $message);
+        if ($stmt->execute()) {
+            $stmt->close();
+            echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
+        } else {
+            $stmt->close();
+            echo json_encode(['success' => false, 'message' => 'Error executing query: ' . $database->error]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error preparing statement: ' . $database->error]);
+    }
 }
 ?>

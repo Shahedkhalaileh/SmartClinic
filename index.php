@@ -1,5 +1,6 @@
 <?php
 include("connection.php");
+include("translations.php");
 
 // Get statistics
 $stats = [
@@ -50,11 +51,11 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                                     LIMIT 6");
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Clinic - Your Health, Our Priority</title>
+    <title>Smart Clinic - <?php echo t('hero_title'); ?></title>
     <style>
         * {
             margin: 0;
@@ -114,6 +115,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             display: flex;
             gap: 20px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
@@ -124,6 +126,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             padding: 10px 18px;
             border-radius: 10px;
             font-size: 15px;
+        }
+        
+        /* Ensure language switcher is visible */
+        .nav-links .language-switcher {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         .nav-links a:hover {
@@ -746,6 +755,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
     </style>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/language.css">
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -753,23 +763,24 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         <div class="nav-container">
             <div class="logo">🏥 Smart Clinic</div>
             <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#specialties">Specialties</a>
-                <a href="#doctors">Doctors</a>
-                <a href="#about">About</a>
-                <a href="login.php" class="btn-primary" style="padding: 10px 24px; font-size: 14px;">LOGIN</a>
-                <a href="signup.php" class="btn-secondary" style="padding: 10px 24px; font-size: 14px;">Signup</a>
+                <a href="#home"><?php echo t('home'); ?></a>
+                <a href="#specialties"><?php echo t('specialties'); ?></a>
+                <a href="#doctors"><?php echo t('doctors'); ?></a>
+                <a href="#about"><?php echo t('about'); ?></a>
+                <?php include("language-switcher.php"); ?>
+                <a href="login.php" class="btn-primary" style="padding: 10px 24px; font-size: 14px;"><?php echo strtoupper(t('login')); ?></a>
+                <a href="signup.php" class="btn-secondary" style="padding: 10px 24px; font-size: 14px;"><?php echo t('signup'); ?></a>
             </div>
         </div>
     </nav>
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>Your Health, Our Priority</h1>
-            <p>Experience world-class healthcare with our expert medical team</p>
+            <h1><?php echo t('hero_title'); ?></h1>
+            <p><?php echo t('hero_subtitle'); ?></p>
             <div class="hero-buttons">
-                <a href="login.php" class="btn-primary">Book Appointment</a>
-                <a href="#specialties" class="btn-secondary">View Specialties</a>
+                <a href="login.php" class="btn-primary"><?php echo t('book_appointment'); ?></a>
+                <a href="#specialties" class="btn-secondary"><?php echo t('view_specialties'); ?></a>
             </div>
         </div>
     </section>
@@ -781,28 +792,28 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                 <div class="stat-card">
                     <div>
                         <div class="stat-number"><?php echo $stats['doctors']; ?></div>
-                        <div class="stat-label">Expert Doctors</div>
+                        <div class="stat-label"><?php echo t('expert_doctors'); ?></div>
                     </div>
                     <div class="stat-icon" style="background-image: url('img/icons/doctors-hover.svg'); background-size: contain; background-repeat: no-repeat;"></div>
                 </div>
                 <div class="stat-card">
                     <div>
                         <div class="stat-number"><?php echo $stats['specialties']; ?></div>
-                        <div class="stat-label">Medical Specialties</div>
+                        <div class="stat-label"><?php echo t('medical_specialties'); ?></div>
                     </div>
                     <div class="stat-icon" style="background-image: url('img/icons/session-iceblue.svg'); background-size: contain; background-repeat: no-repeat;"></div>
                 </div>
                 <div class="stat-card">
                     <div>
                         <div class="stat-number"><?php echo $stats['patients']; ?></div>
-                        <div class="stat-label">Happy Patients</div>
+                        <div class="stat-label"><?php echo t('happy_patients'); ?></div>
                     </div>
                     <div class="stat-icon" style="background-image: url('img/icons/patients-hover.svg'); background-size: contain; background-repeat: no-repeat;"></div>
                 </div>
                 <div class="stat-card">
                     <div>
                         <div class="stat-number"><?php echo $stats['appointments']; ?></div>
-                        <div class="stat-label">Appointments</div>
+                        <div class="stat-label"><?php echo t('appointments'); ?></div>
                     </div>
                     <div class="stat-icon" style="background-image: url('img/icons/book-hover.svg'); background-size: contain; background-repeat: no-repeat;"></div>
                 </div>
@@ -813,14 +824,10 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
     <!-- Specialties Section -->
     <section class="section" id="specialties">
         <div class="container">
-            <h2 class="section-title">Our Medical Specialties</h2>
+            <h2 class="section-title"><?php echo t('our_medical_specialties'); ?></h2>
             <div class="specialties-grid">
                 <?php 
                 if ($specialties_result && $specialties_result->num_rows > 0) {
-                    $icons = ['🩺', '💊', '🫀', '🧠', '👁️', '🦷', '🦴', '👶', '🏥', '🔬', '💉', '🩹', '🫁', '🧬', '🦠', '⚕️'];
-                    $usedIcons = [];
-                    $iconIndex = 0;
-                    
                     while ($specialty = $specialties_result->fetch_assoc()) {
                         // Check if image exists in the specialty data
                         $hasImage = isset($specialty['image']) && !empty($specialty['image']);
@@ -828,37 +835,22 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                         
                         if ($hasImage) {
                             // Display image if available
-                            $iconHtml = '<img src="' . htmlspecialchars($specialty['image']) . '" alt="' . htmlspecialchars($specialty['sname']) . '" class="specialty-image">';
+                            $iconHtml = '<img src="' . htmlspecialchars($specialty['image']) . '" alt="' . htmlspecialchars(translateSpecialty($specialty['sname'])) . '" class="specialty-image">';
                         } else {
-                            // Display different icon for each specialty
-                            // Use specialty ID to ensure consistent icon per specialty
-                            $specialtyId = isset($specialty['id']) ? $specialty['id'] : $iconIndex;
-                            $icon = $icons[$specialtyId % count($icons)];
-                            
-                            // Make sure each specialty gets a different icon
-                            while (in_array($icon, $usedIcons) && count($usedIcons) < count($icons)) {
-                                $iconIndex++;
-                                $icon = $icons[($specialtyId + $iconIndex) % count($icons)];
-                            }
-                            
-                            if (!in_array($icon, $usedIcons)) {
-                                $usedIcons[] = $icon;
-                            }
-                            
+                            // Get icon based on specialty name
+                            $icon = getSpecialtyIcon($specialty['sname']);
                             $iconHtml = '<div class="specialty-icon">' . $icon . '</div>';
                         }
                         
                         echo '
                         <div class="specialty-card">
                             ' . $iconHtml . '
-                            <div class="specialty-name">' . htmlspecialchars($specialty['sname']) . '</div>
-                            <a href="patient/specialties.php" class="btn-primary" style="padding: 8px 20px; font-size: 14px; margin-top: 10px;">View Doctors</a>
+                            <div class="specialty-name">' . htmlspecialchars(translateSpecialty($specialty['sname'])) . '</div>
+                            <a href="patient/specialties.php" class="btn-primary" style="padding: 8px 20px; font-size: 14px; margin-top: 10px;">' . t('view_doctors') . '</a>
                         </div>';
-                        
-                        $iconIndex++;
                     }
                 } else {
-                    echo '<p style="text-align: center; color: #666;">No specialties with images available at the moment.</p>';
+                    echo '<p style="text-align: center; color: #666;">' . t('no_specialties') . '</p>';
                 }
                 ?>
             </div>
@@ -868,7 +860,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
     <!-- Doctors Section -->
     <section class="section" id="doctors">
         <div class="container">
-            <h2 class="section-title">Our Expert Doctors</h2>
+            <h2 class="section-title"><?php echo t('our_expert_doctors'); ?></h2>
             <div class="doctors-grid">
                 <?php 
                 if ($doctors_result && $doctors_result->num_rows > 0) {
@@ -878,12 +870,12 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                         <div class="doctor-card">
                             <div class="doctor-avatar">' . $initial . '</div>
                             <div class="doctor-name">Dr. ' . htmlspecialchars($doctor['docname']) . '</div>
-                            <div class="doctor-specialty">' . htmlspecialchars($doctor['specialty_name'] ?? 'General') . '</div>
-                            <a href="login.php" class="btn-primary" style="padding: 8px 20px; font-size: 14px;">Book Appointment</a>
+                            <div class="doctor-specialty">' . htmlspecialchars(translateSpecialty($doctor['specialty_name'] ?? 'General Medicine')) . '</div>
+                            <a href="login.php" class="btn-primary" style="padding: 8px 20px; font-size: 14px;">' . t('book_appointment') . '</a>
                         </div>';
                     }
                 } else {
-                    echo '<p style="text-align: center; color: #666;">No doctors available at the moment.</p>';
+                    echo '<p style="text-align: center; color: #666;">' . t('no_doctors') . '</p>';
                 }
                 ?>
             </div>
@@ -893,32 +885,32 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
     <!-- Features Section -->
     <section class="section" id="about">
         <div class="container">
-            <h2 class="section-title">Why Choose Smart Clinic?</h2>
+            <h2 class="section-title"><?php echo t('why_choose_us'); ?></h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Quick Appointments</div>
-                    <div class="feature-desc">Book your appointment online in minutes, no waiting in queues.</div>
+                    <div class="feature-title"><?php echo t('quick_appointments'); ?></div>
+                    <div class="feature-desc"><?php echo t('quick_appointments_desc'); ?></div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">👨‍⚕️</div>
-                    <div class="feature-title">Expert Doctors</div>
-                    <div class="feature-desc">Our team consists of highly qualified and experienced medical professionals.</div>
+                    <div class="feature-title"><?php echo t('expert_doctors_feature'); ?></div>
+                    <div class="feature-desc"><?php echo t('expert_doctors_desc'); ?></div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <div class="feature-title">Secure & Private</div>
-                    <div class="feature-desc">Your medical records and personal information are kept completely confidential.</div>
+                    <div class="feature-title"><?php echo t('secure_private'); ?></div>
+                    <div class="feature-desc"><?php echo t('secure_private_desc'); ?></div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📱</div>
-                    <div class="feature-title">Easy Management</div>
-                    <div class="feature-desc">Manage your appointments, view medical records, and chat with doctors all in one place.</div>
+                    <div class="feature-title"><?php echo t('easy_management'); ?></div>
+                    <div class="feature-desc"><?php echo t('easy_management_desc'); ?></div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💬</div>
-                    <div class="feature-title">Direct Communication</div>
-                    <div class="feature-desc">Chat directly with your doctor for consultations and follow-ups.</div>
+                    <div class="feature-title"><?php echo t('direct_communication'); ?></div>
+                    <div class="feature-desc"><?php echo t('direct_communication_desc'); ?></div>
                 </div>
             </div>
         </div>
@@ -927,10 +919,10 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 Smart Clinic. All rights reserved.</p>
+            <p><?php echo t('copyright'); ?></p>
             <p style="margin-top: 10px;">
-                <a href="login.php" style="color: #667eea; text-decoration: none; margin: 0 10px;">Login</a> |
-                <a href="signup.php" style="color: #667eea; text-decoration: none; margin: 0 10px;">Sign Up</a>
+                <a href="login.php" style="color: #667eea; text-decoration: none; margin: 0 10px;"><?php echo t('login'); ?></a> |
+                <a href="signup.php" style="color: #667eea; text-decoration: none; margin: 0 10px;"><?php echo t('signup'); ?></a>
             </p>
         </div>
     </footer>

@@ -13,9 +13,11 @@
     }
     
     include("../connection.php");
+    include("../translations.php");
+    $page_title = t('schedule');
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,11 +27,63 @@
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/admin/common.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/language.css">
         
-    <title>Schedule</title>
-    <!-- All common styles are now in CSS files -->
+    <title><?php echo $page_title; ?></title>
+    <style>
+        .language-switcher-header {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        [dir="rtl"] .language-switcher-header {
+            right: 15px;
+            left: auto;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-active {
+            border-right: none !important;
+            border-left: 7px solid var(--primarycolor) !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+        
+        .logout-btn {
+            width: 100% !important;
+            margin-top: 15px !important;
+        }
+    </style>
 </head>
 <body>
+    <div class="language-switcher-header">
+        <?php include("../language-switcher.php"); ?>
+    </div>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="container">
@@ -43,13 +97,13 @@
                                     <img src="../img/user.png" alt="" width="100%" style="border-radius:50%">
                                 </td>
                                 <td style="padding:0px;margin:0px;">
-                                    <p class="profile-title">Administrator</p>
+                                    <p class="profile-title"><?php echo t('administrator'); ?></p>
                                     <p class="profile-subtitle">admin@gmail.com</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                <a href="../logout.php" ><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                <a href="../logout.php" ><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
                     </table>
@@ -58,27 +112,27 @@
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-dashbord" >
-                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></a></div></a>
+                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></a></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-doctor ">
-                        <a href="doctors.php" class="non-style-link-menu "><div><p class="menu-text">Doctors</p></a></div>
+                        <a href="doctors.php" class="non-style-link-menu "><div><p class="menu-text"><?php echo t('doctors'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-schedule menu-active menu-icon-schedule-active">
-                        <a href="schedule.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">Schedule</p></div></a>
+                        <a href="schedule.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">Appointment</p></a></div>
+                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('appointment'); ?></p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-patient">
-                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text">Patients</p></a></div>
+                        <a href="patient.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('patients'); ?></p></a></div>
                     </td>
                 </tr>
 
@@ -88,15 +142,15 @@
             <table border="0" width="100%" style=" border-spacing: 0;margin:0;padding:0;margin-top:25px; ">
                 <tr >
                     <td width="13%" >
-                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text">Back</font></button></a>
+                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text"><?php echo t('back'); ?></font></button></a>
                     </td>
                     <td>
-                        <p style="font-size: 23px;padding-left:12px;font-weight: 600;">Shedule Manager</p>
+                        <p style="font-size: 23px;padding-left:12px;font-weight: 600;"><?php echo t('schedule_manager'); ?></p>
                                            
                     </td>
                     <td width="15%">
-                        <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
-                            Today's Date
+                        <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>;">
+                            <?php echo t('todays_date'); ?>
                         </p>
                         <p class="heading-sub12" style="padding: 0;margin: 0;">
                             <?php 
@@ -121,8 +175,8 @@
                 <tr>
                     <td colspan="4" >
                         <div style="display: flex;margin-top: 40px;">
-                        <div class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49);margin-top: 5px;">Schedule a Session</div>
-                        <a href="?action=add-session&id=none&error=0" class="non-style-link"><button  class="login-btn btn-primary btn button-icon"  style="margin-left:25px;background-image: url('../img/icons/add.svg');">Add a Session</font></button>
+                        <div class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49);margin-top: 5px;"><?php echo t('schedule_a_session'); ?></div>
+                        <a href="?action=add-session&id=none&error=0" class="non-style-link"><button  class="login-btn btn-primary btn button-icon"  style="margin-left:25px;background-image: url('../img/icons/add.svg');"><?php echo t('add_session'); ?></font></button>
                         </a>
                         </div>
                     </td>
@@ -143,7 +197,7 @@
 
                            </td> 
                         <td width="5%" style="text-align: center;font-weight: 600;color: #333;">
-                        Date:
+                        <?php echo t('date'); ?>:
                         </td>
                         <td width="30%">
                         <form action="" method="post">
@@ -152,11 +206,11 @@
 
                         </td>
                         <td width="5%" style="text-align: center;font-weight: 600;color: #333;">
-                        Doctor:
+                        <?php echo t('doctors'); ?>:
                         </td>
                         <td width="30%">
                         <select name="docid" id="" class="box filter-container-items" style="width:90% ;height: 45px;margin: 0;color: #333;background-color: #fff;padding: 10px 15px;font-size: 15px;" >
-                            <option value="" disabled selected style="color: #999;font-style: italic;">Choose Doctor Name from the list</option><br/>
+                            <option value="" disabled selected style="color: #999;font-style: italic;"><?php echo t('choose_doctor'); ?></option><br/>
                                 
                             <?php 
                             
@@ -175,7 +229,7 @@
                         </select>
                     </td>
                     <td width="12%">
-                        <input type="submit"  name="filter" value=" Filter" class=" btn-primary-soft btn button-icon btn-filter"  style="padding: 15px; margin :0;width:100%">
+                        <input type="submit"  name="filter" value=" <?php echo t('filter_button'); ?>" class=" btn-primary-soft btn button-icon btn-filter"  style="padding: 15px; margin :0;width:100%">
                         </form>
                     </td>
 
@@ -239,24 +293,22 @@
                                 <th class="table-headin">
                                     
                                 
-                                Session Title
+                                <?php echo t('title'); ?>
                                 
                                 </th>
                                 
                                 <th class="table-headin">
-                                    Doctor
+                                    <?php echo t('doctors'); ?>
                                 </th>
                                 <th class="table-headin">
                                     
-                                    Sheduled Date & Time
+                                    <?php echo t('session_date_time'); ?>
                                     
                                 </th>
                        
                                 
                                 <th class="table-headin">
-                                    
-                                    Events
-                                    
+                                    <?php echo t('events'); ?>
                                 </tr>
                         </thead>
                         <tbody>
@@ -274,8 +326,8 @@
                                     <img src="../img/notfound.svg" width="25%">
                                     
                                     <br>
-                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; Show all Sessions &nbsp;</font></button>
+                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_results').'</p>
+                                    <a class="non-style-link" href="schedule.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('show_all_sessions').' &nbsp;</font></button>
                                     </a>
                                     </center>
                                     <br><br><br><br>
@@ -307,9 +359,9 @@
                                         <td>
                                         <div style="display:flex;justify-content: center;">
                                         
-                                        <a href="?action=view&id='.$scheduleid.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">View</font></button></a>
+                                        <a href="?action=view&id='.$scheduleid.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">'.t('view').'</font></button></a>
                                        &nbsp;&nbsp;&nbsp;
-                                       <a href="?action=drop&id='.$scheduleid.'&name='.$title.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Remove</font></button></a>
+                                       <a href="?action=drop&id='.$scheduleid.'&name='.$title.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">'.t('delete').'</font></button></a>
                                         </div>
                                         </td>
                                     </tr>';
@@ -358,30 +410,30 @@
 
                             <tr>
                                 <td>
-                                    <p style="padding: 0;margin: 0;text-align: left;font-size: 25px;font-weight: 500;">Add New Session.</p><br>
+                                    <p style="padding: 0;margin: 0;text-align: '.(isArabic() ? 'right' : 'left').';font-size: 25px;font-weight: 500;">'.t('add_new_session').'.</p><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
                                 <form action="add-session.php" method="POST" class="add-new-form">
-                                    <label for="title" class="form-label">Session Title : </label>
+                                    <label for="title" class="form-label">'.t('title').' : </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <input type="text" name="title" class="input-text" placeholder="Name of this Session" required><br>
+                                    <input type="text" name="title" class="input-text" placeholder="'.t('session_name_placeholder').'" required><br>
                                 </td>
                             </tr>
                             <tr>
                                 
                                 <td class="label-td" colspan="2">
-                                    <label for="docid" class="form-label">Select Doctor: </label>
+                                    <label for="docid" class="form-label">'.t('select_doctor').': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
                                     <select name="docid" id="" class="box" style="color: #333;background-color: #fff;padding: 10px 15px;font-size: 15px;min-height: 45px;" >
-                                    <option value="" disabled selected style="color: #999;font-style: italic;">Choose Doctor Name from the list</option><br/>';
+                                    <option value="" disabled selected style="color: #999;font-style: italic;">'.t('choose_doctor').'</option><br/>';
                                         
         
                                         $list11 = $database->query("select  * from  doctor order by docname asc;");
@@ -402,8 +454,8 @@
                             <tr>
                                 <td class="label-td" colspan="2">
                 
-                                    <label for="nop" class="form-label">Number of Patients/Appointment Numbers : </label>
-                                      <small id="nop-hint" style="color:#666; display:block; margin-top:6px;">Allowed: 1 — 5 patients</small>
+                                    <label for="nop" class="form-label">'.t('number_of_patients').' : </label>
+                                      <small id="nop-hint" style="color:#666; display:block; margin-top:6px;">'.t('allowed_1_to_5_patients').'</small>
                                 </td>
                             </tr>
                             <tr>
@@ -417,7 +469,7 @@
     max="5" 
     min="1"  
     step="1"
-    placeholder="The final appointment number for this session depends on this number" 
+    placeholder="'.t('appointment_number_hint').'" 
     required
     oninput="clampNop(this)"
   ><br>
@@ -426,7 +478,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="date" class="form-label">Session Date: </label>
+                                    <label for="date" class="form-label">'.t('session_date').': </label>
                                 </td>
                             </tr>
                             <tr>
@@ -436,20 +488,20 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="time" class="form-label">Schedule Time: </label>
+                                    <label for="time" class="form-label">'.t('scheduled_time').': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <input type="time" name="time" class="input-text" placeholder="Time" required id="time-input"><br>
+                                    <input type="time" name="time" class="input-text" placeholder="'.t('time').'" required id="time-input"><br>
                                 </td>
                             </tr>
                            
                             <tr>
                                 <td colspan="2" style="padding-top: 20px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <input type="reset" value="Reset" class="login-btn btn-primary-soft btn" style="width: 45%;">
-                                        <input type="submit" value="✅ Confirm & Add Session" class="login-btn btn-primary btn" name="shedulesubmit" id="confirm-btn" style="width: 50%; font-weight: bold; font-size: 16px;">
+                                        <input type="reset" value="'.t('reset').'" class="login-btn btn-primary-soft btn" style="width: 45%;">
+                                        <input type="submit" value="✅ '.t('confirm_add_session').'" class="login-btn btn-primary btn" name="shedulesubmit" id="confirm-btn" style="width: 50%; font-weight: bold; font-size: 16px;">
                                     </div>
                                 </td>
                 
@@ -472,15 +524,15 @@
                     <div class="popup">
                     <center>
                     <br><br>
-                        <h2>Session Placed.</h2>
+                        <h2>'.t('session_placed').'</h2>
                         <a class="close" href="schedule.php">&times;</a>
                         <div class="content">
-                        '.substr($titleget,0,40).' was scheduled.<br><br>
+                        '.substr($titleget,0,40).' '.t('was_scheduled').'<br><br>
                             
                         </div>
                         <div style="display: flex;justify-content: center;">
                         
-                        <a href="schedule.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;OK&nbsp;&nbsp;</font></button></a>
+                        <a href="schedule.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;'.t('close').'&nbsp;&nbsp;</font></button></a>
                         <br><br><br><br>
                         </div>
                     </center>
@@ -493,15 +545,15 @@
             <div id="popup1" class="overlay">
                     <div class="popup">
                     <center>
-                        <h2>Are you sure?</h2>
+                        <h2>'.t('are_you_sure').'</h2>
                         <a class="close" href="schedule.php">&times;</a>
                         <div class="content">
-                            You want to delete this record<br>('.substr($nameget,0,40).').
+                            '.t('you_want_to_delete_this_record').'<br>('.substr($nameget,0,40).').
                             
                         </div>
                         <div style="display: flex;justify-content: center;">
-                        <a href="delete-session.php?id='.$id.'" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;Yes&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
-                        <a href="schedule.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;No&nbsp;&nbsp;</font></button></a>
+                        <a href="delete-session.php?id='.$id.'" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"<font class="tn-in-text">&nbsp;'.t('yes').'&nbsp;</font></button></a>&nbsp;&nbsp;&nbsp;
+                        <a href="schedule.php" class="non-style-link"><button  class="btn-primary btn"  style="display: flex;justify-content: center;align-items: center;margin:10px;padding:10px;"><font class="tn-in-text">&nbsp;&nbsp;'.t('no').'&nbsp;&nbsp;</font></button></a>
 
                         </div>
                     </center>
@@ -539,14 +591,14 @@
                         
                             <tr>
                                 <td>
-                                    <p style="padding: 0;margin: 0;text-align: left;font-size: 25px;font-weight: 500;">View Details.</p><br><br>
+                                    <p style="padding: 0;margin: 0;text-align: '.(isArabic() ? 'right' : 'left').';font-size: 25px;font-weight: 500;">'.t('view_details').'</p><br><br>
                                 </td>
                             </tr>
                             
                             <tr>
                                 
                                 <td class="label-td" colspan="2">
-                                    <label for="name" class="form-label">Session Title: </label>
+                                    <label for="name" class="form-label">'.t('session_title').': </label>
                                 </td>
                             </tr>
                             <tr>
@@ -557,7 +609,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="Email" class="form-label">Doctor of this session: </label>
+                                    <label for="Email" class="form-label">'.t('doctor_of_this_session').': </label>
                                 </td>
                             </tr>
                             <tr>
@@ -567,7 +619,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="nic" class="form-label">Scheduled Date: </label>
+                                    <label for="nic" class="form-label">'.t('scheduled_date').': </label>
                                 </td>
                             </tr>
                             <tr>
@@ -577,7 +629,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="Tele" class="form-label">Scheduled Time: </label>
+                                    <label for="Tele" class="form-label">'.t('scheduled_time').': </label>
                                 </td>
                             </tr>
                             <tr>
@@ -587,7 +639,7 @@
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="spec" class="form-label"><b>Patients that Already registerd for this session:</b> ('.$result12->num_rows."/".$nop.')</label>
+                                    <label for="spec" class="form-label"><b>'.t('patients_already_registered').':</b> ('.$result12->num_rows."/".$nop.')</label>
                                     <br><br>
                                 </td>
                             </tr>
@@ -601,20 +653,18 @@
                                  <thead>
                                  <tr>   
                                         <th class="table-headin">
-                                             Patient ID
+                                             '.t('patient_id').'
                                          </th>
                                          <th class="table-headin">
-                                             Patient name
+                                             '.t('patient_name').'
                                          </th>
                                          <th class="table-headin">
-                                             
-                                             Appointment number
-                                             
+                                             '.t('appointment_number').'
                                          </th>
                                         
                                          
                                          <th class="table-headin">
-                                             Patient Telephone
+                                             '.t('patient_telephone').'
                                          </th>
                                          
                                  </thead>
@@ -633,8 +683,8 @@
                                              <img src="../img/notfound.svg" width="25%">
                                              
                                              <br>
-                                             <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">We  couldnt find anything related to your keywords !</p>
-                                             <a class="non-style-link" href="appointment.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; Show all Appointments &nbsp;</font></button>
+                                             <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_sessions_found').'</p>
+                                             <a class="non-style-link" href="appointment.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('show_all_appointments').' &nbsp;</font></button>
                                              </a>
                                              </center>
                                              <br><br><br><br>

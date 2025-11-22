@@ -13,13 +13,14 @@ if(isset($_SESSION["user"])){
 }
 
 include("../connection.php");
+include("../translations.php");
 $userrow = $database->query("SELECT * FROM doctor WHERE docemail='$useremail'");
 $userfetch=$userrow->fetch_assoc();
 $userid= $userfetch["docid"];
 $username=$userfetch["docname"];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,7 +28,8 @@ $username=$userfetch["docname"];
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
-    <title>Patients</title>
+    <link rel="stylesheet" href="../css/language.css">
+    <title><?php echo t('my_patients'); ?></title>
     <style>
         * {
             margin: 0;
@@ -126,6 +128,24 @@ $username=$userfetch["docname"];
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .profile-container td[width="30%"] {
+            width: 30% !important;
+            min-width: 30% !important;
+            max-width: 30% !important;
+        }
+        
+        .profile-container img[src*="user.png"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        .profile-container table {
+            width: 100% !important;
         }
         
         .dash-body {
@@ -187,14 +207,9 @@ $username=$userfetch["docname"];
             box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
         }
         
-        .btn-primary-soft {
-            background: rgba(102, 126, 234, 0.1) !important;
-            color: #667eea !important;
-            border: 2px solid rgba(102, 126, 234, 0.2) !important;
-        }
-        
-        .btn-primary-soft:hover {
-            background: rgba(102, 126, 234, 0.2) !important;
+        .logout-btn {
+            width: 100% !important;
+            margin-top: 15px !important;
         }
         
         .input-text, .filter-container-items {
@@ -386,6 +401,42 @@ $username=$userfetch["docname"];
     </style>
 </head>
 <body>
+    <div class="language-switcher-header" style="position: absolute; top: 15px; right: 15px; z-index: 1001;">
+        <?php include("../language-switcher.php"); ?>
+    </div>
+    <style>
+        [dir="rtl"] .language-switcher-header {
+            right: auto;
+            left: 15px;
+        }
+        
+        /* RTL Menu adjustments - Icons on right, text beside them */
+        [dir="rtl"] .menu-btn {
+            background-position: calc(100% - 20px) 50% !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-text {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] .menu-btn:hover {
+            transform: translateX(-5px) !important;
+        }
+        
+        /* RTL Table adjustments - Text starts from right */
+        [dir="rtl"] .sub-table th,
+        [dir="rtl"] .sub-table td {
+            text-align: right !important;
+        }
+        
+        [dir="rtl"] table th,
+        [dir="rtl"] table td {
+            text-align: right !important;
+        }
+    </style>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 <div class="container">
@@ -405,58 +456,58 @@ $username=$userfetch["docname"];
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <a href="../logout.php"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
 
-            <tr class="menu-row"><td class="menu-btn menu-icon-dashbord"><a href="index.php" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></div></a></td></tr>
-            <tr class="menu-row"><td class="menu-btn menu-icon-appoinment"><a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text">My Appointments</p></div></a></td></tr>
-            <tr class="menu-row"><td class="menu-btn menu-icon-session"><a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">My Sessions</p></div></a></td></tr>
-            <tr class="menu-row"><td class="menu-btn menu-icon-patient menu-active menu-icon-patient-active"><a href="patient.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">My Patients</p></div></a></td></tr>
-            <tr class="menu-row"><td class="menu-btn menu-icon-patient"><a href="medical_record.php" class="non-style-link-menu"><div><p class="menu-text">Medical Record for patient</p></div></a></td></tr>
-            <tr class="menu-row"><td class="menu-btn menu-icon-settings"><a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-dashbord"><a href="index.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-appoinment"><a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-session"><a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_sessions'); ?></p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-patient menu-active menu-icon-patient-active"><a href="patient.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('my_patients'); ?></p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-patient"><a href="medical_record.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('medical_record_for_patient'); ?></p></div></a></td></tr>
+            <tr class="menu-row"><td class="menu-btn menu-icon-settings"><a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></div></a></td></tr>
         </table>
     </div>
 
 <?php
-$selecttype="My";
-$current="My patients Only";
+$selecttype = isArabic() ? "مرضاي" : "My";
+$current = isArabic() ? "مرضاي فقط" : "My patients Only";
 
 if($_POST){
     if(isset($_POST["search"])){
         $keyword=$_POST["search12"];
         $sqlmain= "SELECT * FROM patient WHERE pemail='$keyword' OR pname='$keyword' OR pname LIKE '$keyword%' OR pname LIKE '%$keyword' OR pname LIKE '%$keyword%'";
-        $selecttype="my";
+        $selecttype = t("my_patients");
     }
 
     if(isset($_POST["filter"])){
         if($_POST["showonly"]=='all'){
             $sqlmain= "SELECT * FROM patient";
-            $selecttype="All";
-            $current="All patients";
+            $selecttype = t("all");
+            $current = t("all_patients");
         } else {
             $sqlmain= "SELECT * FROM appointment INNER JOIN patient ON patient.pid=appointment.pid INNER JOIN schedule ON schedule.scheduleid=appointment.scheduleid WHERE schedule.docid=$userid;";
-            $selecttype="My";
-            $current="My patients Only";
+            $selecttype = t("my_patients");
+            $current = t("my_patients_only");
         }
     }
 } else {
     $sqlmain= "SELECT * FROM appointment INNER JOIN patient ON patient.pid=appointment.pid INNER JOIN schedule ON schedule.scheduleid=appointment.scheduleid WHERE schedule.docid=$userid;";
-    $selecttype="My";
+    $selecttype = t("my_patients");
 }
 ?>
 <div class="dash-body">
     <table border="0" width="100%" style="border-spacing:0;margin-top:25px;">
         <tr>
             <td width="13%">
-                <a href="index.php"><button class="login-btn btn-primary-soft btn btn-icon-back" style="padding:11px;margin-left:20px;width:125px">Back</button></a>
+                <a href="index.php"><button class="login-btn btn-primary-soft btn btn-icon-back" style="padding:11px;margin-left:20px;width:125px"><?php echo t('back'); ?></button></a>
             </td>
             <td>
                 <form action="" method="post" class="header-search">
-                    <input type="search" name="search12" class="input-text header-searchbar" placeholder="Search Patient name or Email" list="patient">
+                    <input type="search" name="search12" class="input-text header-searchbar" placeholder="<?php echo t('search_patient'); ?>" list="patient">
                     &nbsp;&nbsp;
                     <?php
                     echo '<datalist id="patient">';
@@ -469,11 +520,11 @@ if($_POST){
                     }
                     echo '</datalist>';
                     ?>
-                    <input type="Submit" value="Search" name="search" class="login-btn btn-primary btn" style="padding:10px 25px;">
+                    <input type="Submit" value="<?php echo t('search'); ?>" name="search" class="login-btn btn-primary btn" style="padding:10px 25px;">
                 </form>
             </td>
             <td width="15%">
-                <p style="font-size:14px;color:rgb(119,119,119);text-align:right;">Today's Date</p>
+                <p style="font-size:14px;color:rgb(119,119,119);text-align:<?php echo isArabic() ? 'left' : 'right'; ?>;"><?php echo t('todays_date'); ?></p>
                 <p class="heading-sub12"><?php date_default_timezone_set('Asia/Amman'); echo date('Y-m-d'); ?></p>
             </td>
             <td width="10%">
@@ -484,7 +535,7 @@ if($_POST){
         <tr>
             <td colspan="4" style="padding-top:10px;">
                 <p class="heading-main12" style="margin-left:45px;font-size:18px;color:rgb(49,49,49)">
-                    <?php echo $selecttype." Patients (".$list11->num_rows.")"; ?>
+                    <?php echo $selecttype." ".t('patients')." (".$list11->num_rows.")"; ?>
                 </p>
             </td>
         </tr>
@@ -494,16 +545,16 @@ if($_POST){
                 <center>
                 <table class="filter-container" border="0">
                 <form action="" method="post">
-                    <td style="text-align:right;">Show Details About : &nbsp;</td>
+                    <td style="text-align:<?php echo isArabic() ? 'left' : 'right'; ?>;"><?php echo t('show_details_about'); ?> &nbsp;</td>
                     <td width="30%">
                         <select name="showonly" class="box filter-container-items" style="width:90%;height:37px;">
                             <option value="" disabled selected hidden><?php echo $current ?></option>
-                            <option value="my">My Patients Only</option>
-                            <option value="all">All Patients</option>
+                            <option value="my"><?php echo t('my_patients_only'); ?></option>
+                            <option value="all"><?php echo t('all_patients'); ?></option>
                         </select>
                     </td>
                     <td width="12%">
-                        <input type="submit" name="filter" value=" Filter" class="btn-primary-soft btn button-icon btn-filter" style="padding:15px;width:100%">
+                        <input type="submit" name="filter" value="<?php echo ' '.t('filter_button'); ?>" class="btn-primary-soft btn button-icon btn-filter" style="padding:15px;width:100%">
                     </td>
                 </form>
                 </table>
@@ -518,13 +569,13 @@ if($_POST){
                 <table width="93%" class="sub-table scrolldown" style="border-spacing:0;">
                     <thead>
                         <tr>
-                            <td class="table-headin">Name</td>
-                            <td class="table-headin">NIC</td>
-                            <td class="table-headin">Telephone</td>
-                            <td class="table-headin">Email</td>
-                            <td class="table-headin">Date of Birth</td>
-                             <td class="table-headin">Gender</td>
-                            <td class="table-headin">Medical Record</td>
+                            <td class="table-headin"><?php echo t('name'); ?></td>
+                            <td class="table-headin"><?php echo t('settings_nic'); ?></td>
+                            <td class="table-headin"><?php echo t('telephone'); ?></td>
+                            <td class="table-headin"><?php echo t('email'); ?></td>
+                            <td class="table-headin"><?php echo t('date_of_birth'); ?></td>
+                             <td class="table-headin"><?php echo t('gender'); ?></td>
+                            <td class="table-headin"><?php echo t('medical_record'); ?></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -532,8 +583,8 @@ if($_POST){
                     $result= $database->query($sqlmain);
                     if($result->num_rows==0){
                         echo '<tr><td colspan="6"><br><br><center><img src="../img/notfound.svg" width="25%"><br>
-                        <p class="heading-main12">We couldnt find anything related!</p>
-                        <a class="non-style-link" href="patient.php"><button class="login-btn btn-primary-soft btn">Show all Patients</button></a></center><br><br></td></tr>';
+                        <p class="heading-main12">'.t('no_results').'</p>
+                        <a class="non-style-link" href="patient.php"><button class="login-btn btn-primary-soft btn">'.t('show_all_patients').'</button></a></center><br><br></td></tr>';
                     } else {
                         while($row=$result->fetch_assoc()){
                             $pid=$row["pid"];
@@ -545,7 +596,7 @@ if($_POST){
                                 <td>'.substr($row["pdob"],0,10).'</td>
                                 <td>'.substr($row["gender"],0,10).'</td>
                                 <td><div>
-                                   <center> <a href="patient.php?id='.$pid.'&action=view" class="non-style-link"><button class="btn-primary-soft btn">View</button></a></center>
+                                   <center> <a href="patient.php?id='.$pid.'&action=view" class="non-style-link"><button class="btn-primary-soft btn">'.t('view').'</button></a></center>
                                 </div></td>
                             </tr>';
                         }
@@ -601,22 +652,22 @@ if(isset($_GET["id"])){
             <a class="close" href="patient.php">&times;</a>
             <div class="sub-table-container" >
             <table width="80%" class="sub-table" border="2">
-                <tr><td><p style="font-size:25px;font-weight:500;"><center><h2>'.$name.'<br> Medical Record</h2></center></p><br></td></tr>
-                <tr><td class="label-td">Patient ID:</td></tr><tr><td>P-'.$id.'<br><br></td></tr>
-                <tr><td class="label-td">Name:</td></tr><tr><td>'.$name.'<br><br></td></tr>
-                <tr><td class="label-td">Email:</td></tr><tr><td>'.$email.'<br><br></td></tr>
-                <tr><td class="label-td">NIC:</td></tr><tr><td>'.$nic.'<br><br></td></tr>
-                <tr><td class="label-td">Telephone:</td></tr><tr><td>'.$tele.'<br><br></td></tr>
-                <tr><td class="label-td">Address:</td></tr><tr><td>'.$address.'<br><br></td></tr>
-                <tr><td class="label-td">Date of Birth:</td></tr><tr><td>'.$dob.'<br><br></td></tr>
-                <tr><td class="label-td">Diabetes:</td></tr><tr><td>'.$diabetes.'<br><br></td></tr>
-                <tr><td class="label-td">Hypertension:</td></tr><tr><td>'.$pressure.'<br><br></td></tr>
-                <tr><td class="label-td">Height (cm):</td></tr><tr><td>'.$height.'<br><br></td></tr>
-                <tr><td class="label-td">Weight (kg):</td></tr><tr><td>'.$weight.'<br><br></td></tr>
-                <tr><td class="label-td">Diagnosis:</td></tr><tr><td>'.$diagnosis.'<br><br></td></tr>
-                  <tr><td class="label-td">Treatment:</td></tr><tr><td>'.$treatment.'<br><br></td></tr> 
-                    <tr><td class="label-td">Notes:</td></tr><tr><td>'.$notes.'<br><br></td></tr>                                      
-                <tr><td>   <center><a href="patient.php"><input type="button" value="OK" class="login-btn btn-primary-soft btn"></a></center></td></tr>
+                <tr><td><p style="font-size:25px;font-weight:500;"><center><h2>'.$name.'<br> '.t('medical_record').'</h2></center></p><br></td></tr>
+                <tr><td class="label-td">'.t('patient_id').':</td></tr><tr><td>P-'.$id.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('name').':</td></tr><tr><td>'.$name.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('email').':</td></tr><tr><td>'.$email.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('settings_nic').':</td></tr><tr><td>'.$nic.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('telephone').':</td></tr><tr><td>'.$tele.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('address').':</td></tr><tr><td>'.$address.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('date_of_birth').':</td></tr><tr><td>'.$dob.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('diabetes').'</td></tr><tr><td>'.$diabetes.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('hypertension').'</td></tr><tr><td>'.$pressure.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('height_cm').'</td></tr><tr><td>'.$height.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('weight_kg').'</td></tr><tr><td>'.$weight.'<br><br></td></tr>
+                <tr><td class="label-td">'.t('diagnosis').'</td></tr><tr><td>'.$diagnosis.'<br><br></td></tr>
+                  <tr><td class="label-td">'.t('treatment').'</td></tr><tr><td>'.$treatment.'<br><br></td></tr> 
+                    <tr><td class="label-td">'.t('notes').'</td></tr><tr><td>'.$notes.'<br><br></td></tr>                                      
+                <tr><td>   <center><a href="patient.php"><input type="button" value="'.t('close').'" class="login-btn btn-primary-soft btn"></a></center></td></tr>
             </table>
             </div>
         </center>
