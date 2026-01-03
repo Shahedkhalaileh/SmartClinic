@@ -1,0 +1,341 @@
+@app.post("/api/chat_m1")
+@ensure_json_object
+
+def api_chat_m1():
+    sid = get_sid(request, allow_create=True)
+
+    if not sid:
+        return {
+            "ok": False,
+            "error": "sid مفقود",
+            "ui_hint": {"require_sid": True}
+        }, 400
+
+    sess = SESSIONS[sid]
+
+    data = request.json or {}
+    if (
+        not data
+        and sess.get("stage") == "started"
+    ):
+        return {
+            "sid": sid,
+            "ui_hint": {"noop": True}
+        }
+    original_intent = (data.get("intent") or "")
+    msg_raw = data.get("message", "")
+    answers_in = data.get("answers") or {}
+
+    # ===============================
+    # (A) حفظ اللغة فقط إذا اختارها المستخدم صراحة
+    # ===============================
+    if isinstance(answers_in, dict) and "user_language" in answers_in:
+        chosen_lang = answers_in["user_language"]
+        sess["lang"] = chosen_lang
+        sess["asked"].add("user_language")
+        sess["stage"] = "started"
+
+        # 🔥 FIX: لا تكمّل التدفق
+        payload = {"sid": sid, "ask": [build_free_text_question(initial=True)]}
+        return enhance_and_localize_response(payload, sess.get("lang", "ar"))
+    intent = normalize_intent(original_intent, msg_raw)
+    print(f"[CHAT_M1] intent={intent!r} msg={bool(msg_raw)} answers={bool(answers_in)} sid={sid}")
+
+    # ===============================
+    # (A.1) استقبال إجابات الشيك بوكس إن وُجدت
+    # يدعم الاسمين: symptoms_m1 (الموحد) و symptoms_checkbox (قديم)
+    # ===============================
+
+    if isinstance(answers_in, dict) and (
+        "symptoms_m1" in answers_in or "symptoms_checkbox" in answers_in
+    ):
+        # أولاً: وسّع أي حقول أخرى كما المعتاد
+        receive_answers_for_sid(sid, answers_in)
+
+        checkbox_selected = answers_in.get("symptoms_m1") or answers_in.get("symptoms_checkbox")
+
+
+        # المستخدم أرسل بدون اختيار أعراض
+        if isinstance(checkbox_selected, list) and not checkbox_selected:
+            # 1) زد عداد التخطي
+            sess["skip_count"] = int(sess.get("skip_count", 0)) + 1
+
+            # 2) اطلب دفعة جديدة من M1 بناءً على asked الحالي
+            out = generate_questions_from_columns(
+                columns=m1_feature_pool(),
+                asked_set=set(sess.get("asked", set())),
+                batch_size=5,
+                m1_scores=sess.get("M1_scores")
+            )
+
+            if isinstance(out, tuple):
+                q_list, asked_updated = out
+                sess["asked"] = set(asked_updated or set())
+            else:
+                q_list = out
+
+            if q_list:
+                ask_out = q_list if isinstance(q_list, list) else [q_list]
+                ask_out = _sanitize_ask_list(ask_out)
+                _mark_presented_as_asked(sess, ask_out)
+                return enhance_and_localize_response({"sid": sid, "ask": ask_out}, sess.get("lang", "ar"))
+
+            # 3) لا توجد دفعات جديدة ولا اكتفاء كافٍ: سلوك واضح غير معلّق
+            answers_for_stop = _build_answers_for_stop(sess)
+            sufficient, _reason = m1_is_sufficient(answers_for_stop)
+            dist = run_M1_on_answers(answers_for_stop) or {}
+            if not sufficient:
+                if sess["skip_count"] >= 3:
+                    payload = {
+                        "sid": sid,
+                        "ask": [build_free_text_question(initial=False)],
+                        "note": "لا يمكن التقدم دون اختيار أي أعراض. اكتب أعراضك نصًا أو اختر من القوائم."
+                    }
+                    return enhance_and_localize_response(payload, sess.get("lang", "ar"))
+                return enhance_and_localize_response(
+                    {"sid": sid, "note": "اختر عرضًا واحدًا على الأقل أو اكتب أعراضك نصًا."},
+                    sess.get("lang", "ar")
+                )
+
+
+
+
+
+            # =========================
+            # PATCH: M1 → M2 (chat_m1)
+            # =========================
+
+            if dist:
+                answers_canonical = canonicalize_to_m1_keys(sess["answers"], m1_feature_pool())
+
+                # ✅ حساب توزيع الأقسام بعد كل checkbox
+                current_dist = run_M1_on_answers(answers_canonical) or {}
+                sess["M1_scores"] = current_dist
+
+                # إرسال النتائج الحالية للواجهة مع الأسئلة التالية
+                ask_out = q_list if 'q_list' in locals() else []
+
+                # تهيئة payload مؤقت
+                payload = {
+                    "sid": sid,
+                    "ask": ask_out,
+                    "M1_distribution": dict(sorted(current_dist.items(), key=lambda x: -x[1]))
+                }
+                
+                # الآن نتحقق من sufficiency للانتقال إلى M2
+                sufficient, _ = m1_is_sufficient(answers_canonical)
+                if sufficient:
+                    top_dept = max(current_dist, key=current_dist.get)
+                    mapped = DEPT_TO_DISEASE.get(top_dept, top_dept)
+                    sess["mode"] = "M2"
+                    sess["target_disease"] = mapped
+
+                    # توليد كل أسئلة M2 للمرض
+                    q_all = generate_questions("M2", disease_required=[mapped], lang=sess.get("lang", "ar"))
+                    missing = [
+                        k for k in get_required_keys_for_disease(mapped)
+                        if k.lower() not in {kk.lower() for kk in sess["answers"].keys()}
+                    ]
+                    q_list = [qq for qq in q_all if qq.get("name") in missing] or q_all
+                    ask_out = q_list if isinstance(q_list, list) else [q_list]
+                    _mark_presented_as_asked(sess, ask_out)
+
+                    # تحديث payload النهائي مع الأسئلة الجديدة
+                    payload["ask"] = ask_out
+
+                return enhance_and_localize_response(payload, sess.get("lang", "ar"))
+
+                
+
+            # إن لم تكن كافية: نكمل بمنطق M1 أدناه...
+        # إذا لم يتحقق أي مما سبق، اسمح للتدفق الحالي بالاستمرار (free text / yes-no ...)
+
+    # ===============================
+    # (0) بداية الجلسة: سؤال اختيار اللغة أولاً أو سؤال نص حر
+    # ===============================
+    if (
+        intent == ""
+        and not msg_raw
+        and not answers_in
+        and sess.get("stage", "init") == "init"
+        and sess["mode"] == "M1"
+    ):
+        if not sess.get("lang"):
+            payload = {"ask": [build_language_question()], "sid": sid}
+            sess["stage"] = "started"
+            return payload
+        else:
+            payload = {"ask": [build_free_text_question(initial=True)], "sid": sid}
+            sess["stage"] = "started"
+            payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+            return payload
+
+    # ===============================
+    # (1) معالجة النص الحر (أعراض)
+    # ===============================
+    free_text = None
+    if msg_raw:
+        free_text = msg_raw
+    elif isinstance(answers_in, dict) and "free_text_symptoms" in answers_in:
+        free_text = str(answers_in.get("free_text_symptoms") or "").strip()
+
+    if intent in ("", "symptoms") and free_text:
+        norm = llm_normalize_user_text(free_text)
+        candidate = norm.get("text_ar") or norm.get("text_en") or free_text
+
+        # محاولة استخراج الأعراض من النص
+        extracted = {}
+        try:
+            if NLPAgent and nlp_agent:
+                try:
+                    extracted = nlp_agent.extract(candidate)
+                except Exception as e:
+                    print(f"[NLPAgent][EXC] {e}")
+        except Exception as e:
+            print(f"[NLPAgent][EXC] {e}")
+            extracted = {}
+
+        if not extracted:
+            extracted = llm_extract_symptoms(candidate, m1_feature_pool()) or {}
+
+        if not extracted:
+            payload = {
+                "error": "تعذّر تحليل النص تلقائيًا. اذكر أعراضك واحدة واحدة.",
+                "ask": [build_free_text_question(initial=False)],
+                "sid": sid
+            }
+            payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+            return payload
+
+        # تحويل المفاتيح إلى صيغة تدريب M1 ثم تخزين الإجابات
+        canon = canonicalize_to_m1_keys(extracted, m1_feature_pool())
+        receive_answers_for_sid(sid, canon)
+        sess["stage"] = "in_m1"
+
+
+        # تلميح للواجهة ليسأل: هل لديك أعراض أخرى؟
+        payload = {"sid": sid, "ui_hint": {"ask_more_symptoms": True}}
+        payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+        return payload
+
+    # ===============================
+    # (2) نعم / لا — هل لديك أعراض أخرى؟
+    # ===============================
+
+    # ---- (2.1) نعم: اطلب نص حر إضافي
+        if intent == "more_yes":
+            payload = {"ask": [build_free_text_question(initial=False)], "sid": sid}
+            payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+            return payload
+
+        # ---- (2.2) لا: قيّم الاكتفاء أو اطرح شيك بوكس إضافي (بدون m1_followups)
+
+        if intent == "more_no":
+            # ابنِ متجهًا كثيفًا لمفاتيح M1 (كل ما لم يُذكر = 0)
+            pool = m1_feature_pool() or []
+            answers_dense = canonicalize_to_m1_keys(sess["answers"], pool) or {}
+            answers_dense = {k: answers_dense.get(k, 0) for k in pool}
+
+            # شرط الإيقاف على المتجه الكثيف
+            sufficient, _reason = m1_is_sufficient(answers_dense)
+
+            # توزيع الأقسام على نفس المتجه
+            dist = run_M1_on_answers(answers_dense) or {}
+
+            if sufficient and dist:
+                top_dept = max(dist, key=dist.get)
+                disease = DEPT_TO_DISEASE.get(top_dept, top_dept)
+                sess["mode"] = "M2"
+                sess["target_disease"] = disease
+                sess["stage"] = "in_m2"
+
+
+                q_all  = generate_questions("M2", disease_required=[disease], lang=sess.get("lang", "ar"))
+                missing = [
+                    k for k in get_required_keys_for_disease(disease)
+                    if k.lower() not in {kk.lower() for kk in sess["answers"].keys()}
+                ]
+                q_list = [qq for qq in q_all if qq.get("name") in missing] or q_all
+
+                payload = {
+                    "top_department": top_dept,
+                    "target_disease": disease,
+                    "ask": q_list,
+                    "sid": sid,
+                    "note": "تم اعتبار الأعراض كافية للانتقال للمرحلة التالية."
+                }
+                return enhance_and_localize_response(payload, sess.get("lang", "ar"))
+
+            # خلاف ذلك: تابع بدفعات M1 من المصدر الوحيد
+            out = generate_questions_from_columns(
+                columns=m1_feature_pool(),
+                asked_set=set(sess.get("asked", set())),
+                batch_size=5,
+                m1_scores=dist
+            )
+            if isinstance(out, tuple):
+                res, asked = out
+            else:
+                res, asked = out, sess.get("asked", set())
+
+            sess["asked"] = set(asked or set())
+
+            if isinstance(res, list):
+                ask_list = res
+            elif res:
+                ask_list = [res]
+            else:
+                ask_list = []
+
+            payload = {"ask": ask_list, "sid": sid, "note": "نحتاج لبعض المعلومات الإضافية قبل التقييم التالي."}
+            return enhance_and_localize_response(payload, sess.get("lang", "ar"))
+
+            # 5) خلاف ذلك: اطرح دفعة شيك بوكس M1 إضافية من المصدر الوحيد
+
+            out = generate_questions_from_columns(
+                columns=m1_feature_pool(),
+                asked_set=set(sess.get("asked", set())),
+                batch_size=5,
+                m1_scores=dist
+            )
+
+            # فكّ الإخراج بأمان
+            if isinstance(out, tuple):
+                res, asked = out
+            else:
+                res = out
+                asked = sess.get("asked", set())
+
+            # خزّن asked بأمان
+            try:
+                sess["asked"] = set(asked or set())
+            except Exception:
+                # fallback حتى لو لم تكن مجموعة
+                sess["asked"] = set(list(asked)) if asked else set()
+
+            # تحضير ask كقائمة دائمًا
+            if isinstance(res, list):
+                ask_list = res                       # الدالة أعادت قائمة أسئلة
+            elif res:
+                ask_list = [res]                     # الدالة أعادت سؤالًا واحدًا (dict)
+            else:
+                ask_list = []                        # لا يوجد سؤال
+
+            payload = {
+                "ask": ask_list,
+                "sid": sid,
+                "note": "نحتاج لبعض المعلومات الإضافية قبل التقييم التالي."
+            }
+            payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+            return payload
+
+        # ===============================
+        # الافتراضي: أعِد سؤال نص حر أولي/إضافي حسب اللغة
+        # ===============================
+
+        # حماية إضافية إن رغبت الإبقاء على الذيل
+        if 'payload' not in locals():
+            payload = {"sid": sid, "ui_hint": {"noop": True}}
+
+        payload = enhance_and_localize_response(payload, sess.get("lang", "ar"))
+        return payload

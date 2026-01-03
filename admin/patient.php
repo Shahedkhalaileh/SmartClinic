@@ -1,34 +1,35 @@
 <?php
-    session_start();
+session_start();
 
-    if(isset($_SESSION["user"])){
-        if(($_SESSION["user"])=="" or $_SESSION['usertype']!='a'){
-            header("location: ../login.php");
-            exit();
-        }
-
-    }else{
+if (isset($_SESSION["user"])) {
+    if (($_SESSION["user"]) == "" or $_SESSION['usertype'] != 'a') {
         header("location: ../login.php");
         exit();
     }
-    
-    include("../connection.php");
-    include("../translations.php");
-    $page_title = t('patients');
+
+} else {
+    header("location: ../login.php");
+    exit();
+}
+
+include("../connection.php");
+include("../translations.php");
+$page_title = t('patients');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo getLang(); ?>" dir="<?php echo isArabic() ? 'rtl' : 'ltr'; ?>">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/animations.css">  
-    <link rel="stylesheet" href="../css/main.css">  
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/admin/common.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="../css/language.css">
-        
+
     <title><?php echo $page_title; ?></title>
     <style>
         .language-switcher-header {
@@ -37,49 +38,51 @@
             right: 15px;
             z-index: 1001;
         }
+
         [dir="rtl"] .language-switcher-header {
             right: auto;
             left: 15px;
         }
-        
+
         /* RTL Menu adjustments - Icons on right, text beside them */
         [dir="rtl"] .menu-btn {
             background-position: calc(100% - 20px) 50% !important;
             text-align: right !important;
         }
-        
+
         [dir="rtl"] .menu-text {
             padding-left: 0 !important;
             padding-right: 50px !important;
             text-align: right !important;
         }
-        
+
         [dir="rtl"] .menu-active {
             border-right: none !important;
             border-left: 7px solid var(--primarycolor) !important;
         }
-        
+
         [dir="rtl"] .menu-btn:hover {
             transform: translateX(-5px) !important;
         }
-        
+
         /* RTL Table adjustments - Text starts from right */
         [dir="rtl"] .sub-table th,
         [dir="rtl"] .sub-table td {
             text-align: right !important;
         }
-        
+
         [dir="rtl"] table th,
         [dir="rtl"] table td {
             text-align: right !important;
         }
-        
+
         .logout-btn {
             width: 100% !important;
             margin-top: 15px !important;
         }
     </style>
 </head>
+
 <body>
     <div class="language-switcher-header">
         <?php include("../language-switcher.php"); ?>
@@ -93,7 +96,7 @@
                     <td style="padding:10px" colspan="2">
                         <table border="0" class="profile-container">
                             <tr>
-                                <td width="30%" style="padding-left:20px" >
+                                <td width="30%" style="padding-left:20px">
                                     <img src="../img/user.png" alt="" width="100%" style="border-radius:50%">
                                 </td>
                                 <td style="padding:0px;margin:0px;">
@@ -103,247 +106,283 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                <a href="../logout.php" ><input type="button" value="<?php echo t('logout'); ?>" class="logout-btn btn-primary-soft btn"></a>
+                                    <a href="../logout.php"><input type="button" value="<?php echo t('logout'); ?>"
+                                            class="logout-btn btn-primary-soft btn"></a>
                                 </td>
                             </tr>
-                    </table>
-                    </td>
-                </tr>
-                <tr class="menu-row" >
-                    <td class="menu-btn menu-icon-dashbord" >
-                        <a href="index.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></a></div></a>
+                        </table>
                     </td>
                 </tr>
                 <tr class="menu-row">
-                    <td class="menu-btn menu-icon-doctor ">
-                        <a href="doctors.php" class="non-style-link-menu "><div><p class="menu-text"><?php echo t('doctors'); ?></p></a></div>
-                    </td>
-                </tr>
-                <tr class="menu-row" >
-                    <td class="menu-btn menu-icon-schedule">
-                        <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('schedule'); ?></p></div></a>
-                    </td>
-                </tr>
-                <tr class="menu-row">
-                    <td class="menu-btn menu-icon-appoinment">
-                        <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('appointment'); ?></p></a></div>
-                    </td>
-                </tr>
-                <tr class="menu-row" >
-                    <td class="menu-btn menu-icon-patient  menu-active menu-icon-patient-active">
-                        <a href="patient.php" class="non-style-link-menu  non-style-link-menu-active"><div><p class="menu-text"><?php echo t('patients'); ?></p></a></div>
-                    </td>
-                </tr>
+                    <td class="menu-btn menu-icon-dashbord">
+                        <a href="index.php" class="non-style-link-menu">
+                            <div>
+                                <p class="menu-text"><?php echo t('dashboard'); ?></p>
+                        </a>
+        </div></a>
+        </td>
+        </tr>
+        <tr class="menu-row">
+            <td class="menu-btn menu-icon-doctor ">
+                <a href="doctors.php" class="non-style-link-menu ">
+                    <div>
+                        <p class="menu-text"><?php echo t('doctors'); ?></p>
+                </a>
+    </div>
+    </td>
+    </tr>
+    <tr class="menu-row">
+        <td class="menu-btn menu-icon-schedule">
+            <a href="schedule.php" class="non-style-link-menu">
+                <div>
+                    <p class="menu-text"><?php echo t('schedule'); ?></p>
+                </div>
+            </a>
+        </td>
+    </tr>
+    <tr class="menu-row">
+        <td class="menu-btn menu-icon-appoinment">
+            <a href="appointment.php" class="non-style-link-menu">
+                <div>
+                    <p class="menu-text"><?php echo t('appointment'); ?></p>
+            </a></div>
+        </td>
+    </tr>
+    <tr class="menu-row">
+        <td class="menu-btn menu-icon-patient  menu-active menu-icon-patient-active">
+            <a href="patient.php" class="non-style-link-menu  non-style-link-menu-active">
+                <div>
+                    <p class="menu-text"><?php echo t('patients'); ?></p>
+            </a></div>
+        </td>
+    </tr>
+    <tr class="menu-row">
+        <td class="menu-btn menu-icon-session">
+            <a href="admin-messages.php" class="non-style-link-menu">
+                <div>
+                    <p class="menu-text"><?php echo t('admin_messages'); ?></p>
+                </div>
+            </a>
+        </td>
+    </tr>
 
-            </table>
-        </div>
-        <div class="dash-body">
-            <table border="0" width="100%" style=" border-spacing: 0;margin:0;padding:0;margin-top:25px; ">
-                <tr >
-                    <td width="13%">
+    </table>
+    </div>
+    <div class="dash-body">
+        <table border="0" width="100%" style=" border-spacing: 0;margin:0;padding:0;margin-top:25px; ">
+            <tr>
+                <td width="13%">
 
-                    <a href="index.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text"><?php echo t('back'); ?></font></button></a>
-                        
-                    </td>
-                    <td>
-                        
-                        <form action="" method="post" class="header-search">
+                    <a href="index.php"><button class="login-btn btn-primary-soft btn btn-icon-back"
+                            style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px">
+                            <font class="tn-in-text"><?php echo t('back'); ?></font>
+                        </button></a>
 
-                            <input type="search" name="search" class="input-text header-searchbar" placeholder="<?php echo t('search_patient'); ?>" list="patient">&nbsp;&nbsp;
-                            
-                            <?php
-                                echo '<datalist id="patient">';
-                                $list11 = $database->query("select  pname,pemail from patient;");
+                </td>
+                <td>
 
-                                for ($y=0;$y<$list11->num_rows;$y++){
-                                    $row00=$list11->fetch_assoc();
-                                    $d=$row00["pname"];
-                                    $c=$row00["pemail"];
-                                    echo "<option value='$d'><br/>";
-                                    echo "<option value='$c'><br/>";
-                                };
+                    <form action="" method="post" class="header-search">
 
-                            echo ' </datalist>';
-?>
-                            
-                       
-                            <input type="Submit" value="<?php echo t('search'); ?>" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
-                        
-                        </form>
-                        
-                    </td>
-                    <td width="15%">
-                        <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>;">
-                            <?php echo t('todays_date'); ?>
-                        </p>
-                        <p class="heading-sub12" style="padding: 0;margin: 0;">
-                            <?php 
-                  date_default_timezone_set('Asia/Amman');
+                        <input type="search" name="search" class="input-text header-searchbar"
+                            placeholder="<?php echo t('search_patient'); ?>" list="patient">&nbsp;&nbsp;
+
+                        <?php
+                        echo '<datalist id="patient">';
+                        $list11 = $database->query("select  pname,pemail from patient;");
+
+                        for ($y = 0; $y < $list11->num_rows; $y++) {
+                            $row00 = $list11->fetch_assoc();
+                            $d = $row00["pname"];
+                            $c = $row00["pemail"];
+                            echo "<option value='$d'><br/>";
+                            echo "<option value='$c'><br/>";
+                        }
+                        ;
+
+                        echo ' </datalist>';
+                        ?>
+
+
+                        <input type="Submit" value="<?php echo t('search'); ?>" class="login-btn btn-primary btn"
+                            style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
+
+                    </form>
+
+                </td>
+                <td width="15%">
+                    <p
+                        style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: <?php echo isArabic() ? 'left' : 'right'; ?>;">
+                        <?php echo t('todays_date'); ?>
+                    </p>
+                    <p class="heading-sub12" style="padding: 0;margin: 0;">
+                        <?php
+                        date_default_timezone_set('Asia/Amman');
 
                         $date = date('Y-m-d');
                         echo $date;
                         ?>
-                        </p>
-                    </td>
-                    <td width="10%">
-                        <button  class="btn-label"  style="display: flex;justify-content: center;align-items: center;"><img src="../img/calendar.svg" width="100%"></button>
-                    </td>
+                    </p>
+                </td>
+                <td width="10%">
+                    <button class="btn-label" style="display: flex;justify-content: center;align-items: center;"><img
+                            src="../img/calendar.svg" width="100%"></button>
+                </td>
 
 
-                </tr>
-               
-                
-                <tr>
-                    <td colspan="4" style="padding-top:10px;">
-                        <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)"><?php echo t('all_patients'); ?> (<?php echo $list11->num_rows; ?>)</p>
-                    </td>
-                    
-                </tr>
-                <?php
-                    if($_POST){
-                        $keyword=$_POST["search"];
-                        
-                        $sqlmain= "select * from patient where pemail='$keyword' or pname='$keyword' or pname like '$keyword%' or pname like '%$keyword' or pname like '%$keyword%' ";
-                    }else{
-                        $sqlmain= "select * from patient order by pid desc";
-
-                    }
+            </tr>
 
 
+            <tr>
+                <td colspan="4" style="padding-top:10px;">
+                    <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)">
+                        <?php echo t('all_patients'); ?> (<?php echo $list11->num_rows; ?>)</p>
+                </td>
 
-                ?>
-                  
-                <tr>
-                   <td colspan="4">
-                       <center>
+            </tr>
+            <?php
+            if ($_POST) {
+                $keyword = $_POST["search"];
+
+                $sqlmain = "select * from patient where pemail='$keyword' or pname='$keyword' or pname like '$keyword%' or pname like '%$keyword' or pname like '%$keyword%' ";
+            } else {
+                $sqlmain = "select * from patient order by pid desc";
+
+            }
+
+
+
+            ?>
+
+            <tr>
+                <td colspan="4">
+                    <center>
                         <div class="abc scroll">
-                        <table width="93%" class="sub-table scrolldown"  style="border-spacing:0;">
-                        <thead>
-                        <tr>
-                                <th class="table-headin">
-                                    
-                                
-                                <?php echo t('name'); ?>
-                                
-                                </th>
-                                <th class="table-headin">
-                                    
-                                
-                                    NIC
-                                    
-                                </th>
-                                <th class="table-headin">
-                                
-                            
-                                <?php echo t('telephone'); ?>
-                                
-                                </th>
-                                <th class="table-headin">
-                                    <?php echo t('email'); ?>
-                                </th>
-                                <th class="table-headin">
-                                    
-                                    <?php echo t('date_of_birth'); ?>
-                                    
-                                </th>
-                                <th class="table-headin">
-                                    
-                                    <?php echo t('actions'); ?>
-                                    
-                                </tr>
-                        </thead>
-                        <tbody>
-                        
-                            <?php
+                            <table width="93%" class="sub-table scrolldown" style="border-spacing:0;">
+                                <thead>
+                                    <tr>
+                                        <th class="table-headin">
 
-                                
-                                $result= $database->query($sqlmain);
 
-                                if($result->num_rows==0){
-                                    echo '<tr>
+                                            <?php echo t('name'); ?>
+
+                                        </th>
+                                        <th class="table-headin">
+
+
+                                            NIC
+
+                                        </th>
+                                        <th class="table-headin">
+
+
+                                            <?php echo t('telephone'); ?>
+
+                                        </th>
+                                        <th class="table-headin">
+                                            <?php echo t('email'); ?>
+                                        </th>
+                                        <th class="table-headin">
+
+                                            <?php echo t('date_of_birth'); ?>
+
+                                        </th>
+                                        <th class="table-headin">
+
+                                            <?php echo t('actions'); ?>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <?php
+
+
+                                    $result = $database->query($sqlmain);
+
+                                    if ($result->num_rows == 0) {
+                                        echo '<tr>
                                     <td colspan="4">
                                     <br><br><br><br>
                                     <center>
                                     <img src="../img/notfound.svg" width="25%">
                                     
                                     <br>
-                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">'.t('no_results').'</p>
-                                        <a class="non-style-link" href="patient.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; '.t('all_patients').' &nbsp;</font></button>
+                                    <p class="heading-main12" style="margin-left: 45px;font-size:20px;color:rgb(49, 49, 49)">' . t('no_results') . '</p>
+                                        <a class="non-style-link" href="patient.php"><button  class="login-btn btn-primary-soft btn"  style="display: flex;justify-content: center;align-items: center;margin-left:20px;">&nbsp; ' . t('all_patients') . ' &nbsp;</font></button>
                                         </a>
                                     </center>
                                     <br><br><br><br>
                                     </td>
                                     </tr>';
-                                    
-                                }
-                                else{
-                                for ( $x=0; $x<$result->num_rows;$x++){
-                                    $row=$result->fetch_assoc();
-                                    $pid=$row["pid"];
-                                    $name=$row["pname"];
-                                    $email=$row["pemail"];
-                                    $nic=$row["pnic"];
-                                    $dob=$row["pdob"];
-                                    $tel=$row["ptel"];
-                                    
-                                    echo '<tr>
-                                        <td> &nbsp;'.
-                                        substr($name,0,35)
-                                        .'</td>
+
+                                    } else {
+                                        for ($x = 0; $x < $result->num_rows; $x++) {
+                                            $row = $result->fetch_assoc();
+                                            $pid = $row["pid"];
+                                            $name = $row["pname"];
+                                            $email = $row["pemail"];
+                                            $nic = $row["pnic"];
+                                            $dob = $row["pdob"];
+                                            $tel = $row["ptel"];
+
+                                            echo '<tr>
+                                        <td> &nbsp;' .
+                                                substr($name, 0, 35)
+                                                . '</td>
                                         <td>
-                                        '.substr($nic,0,12).'
+                                        ' . substr($nic, 0, 12) . '
                                         </td>
                                         <td>
-                                            '.substr($tel,0,10).'
+                                            ' . substr($tel, 0, 10) . '
                                         </td>
                                         <td>
-                                        '.substr($email,0,20).'
+                                        ' . substr($email, 0, 20) . '
                                          </td>
                                         <td>
-                                        '.substr($dob,0,10).'
+                                        ' . substr($dob, 0, 10) . '
                                         </td>
                                         <td >
                                         <div style="display:flex;justify-content: center;">
                                         
-                                        <a href="?action=view&id='.$pid.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">'.t('view').'</font></button></a>
+                                        <a href="?action=view&id=' . $pid . '" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">' . t('view') . '</font></button></a>
                                        
                                         </div>
                                         </td>
                                     </tr>';
-                                    
-                                }
-                            }
-                                 
-                            ?>
- 
-                            </tbody>
 
-                        </table>
+                                        }
+                                    }
+
+                                    ?>
+
+                                </tbody>
+
+                            </table>
                         </div>
-                        </center>
-                   </td> 
-                </tr>
-                       
-                        
-                        
-            </table>
-        </div>
+                    </center>
+                </td>
+            </tr>
+
+
+
+        </table>
     </div>
-    <?php 
-    if($_GET){
-        
-        $id=$_GET["id"];
-        $action=$_GET["action"];
-            $sqlmain= "select * from patient where pid='$id'";
-            $result= $database->query($sqlmain);
-            $row=$result->fetch_assoc();
-            $name=$row["pname"];
-            $email=$row["pemail"];
-            $nic=$row["pnic"];
-            $dob=$row["pdob"];
-            $tele=$row["ptel"];
-            $address=$row["paddress"];
-            echo '
+    </div>
+    <?php
+    if ($_GET) {
+
+        $id = $_GET["id"];
+        $action = $_GET["action"];
+        $sqlmain = "select * from patient where pid='$id'";
+        $result = $database->query($sqlmain);
+        $row = $result->fetch_assoc();
+        $name = $row["pname"];
+        $email = $row["pemail"];
+        $nic = $row["pnic"];
+        $dob = $row["pdob"];
+        $tele = $row["ptel"];
+        $address = $row["paddress"];
+        echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
                     <center>
@@ -356,18 +395,18 @@
                         
                             <tr>
                                 <td>
-                                    <p style="padding: 0;margin: 0;text-align: '.(isArabic() ? 'right' : 'left').';font-size: 25px;font-weight: 500;">'.t('view_details').'</p><br><br>
+                                    <p style="padding: 0;margin: 0;text-align: ' . (isArabic() ? 'right' : 'left') . ';font-size: 25px;font-weight: 500;">' . t('view_details') . '</p><br><br>
                                 </td>
                             </tr>
                             <tr>
                                 
                                 <td class="label-td" colspan="2">
-                                    <label for="name" class="form-label">'.t('patient_id').': </label>
+                                    <label for="name" class="form-label">' . t('patient_id') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    P-'.$id.'<br><br>
+                                    P-' . $id . '<br><br>
                                 </td>
                                 
                             </tr>
@@ -375,65 +414,65 @@
                             <tr>
                                 
                                 <td class="label-td" colspan="2">
-                                    <label for="name" class="form-label">'.t('name').': </label>
+                                    <label for="name" class="form-label">' . t('name') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    '.$name.'<br><br>
+                                    ' . $name . '<br><br>
                                 </td>
                                 
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="Email" class="form-label">'.t('email').': </label>
+                                    <label for="Email" class="form-label">' . t('email') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                '.$email.'<br><br>
+                                ' . $email . '<br><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="nic" class="form-label">'.t('settings_nic').': </label>
+                                    <label for="nic" class="form-label">' . t('settings_nic') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                '.$nic.'<br><br>
+                                ' . $nic . '<br><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="Tele" class="form-label">'.t('telephone').': </label>
+                                    <label for="Tele" class="form-label">' . t('telephone') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                '.$tele.'<br><br>
+                                ' . $tele . '<br><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    <label for="spec" class="form-label">'.t('address').': </label>
+                                    <label for="spec" class="form-label">' . t('address') . ': </label>
                                     
                                 </td>
                             </tr>
                             <tr>
                             <td class="label-td" colspan="2">
-                            '.$address.'<br><br>
+                            ' . $address . '<br><br>
                             </td>
                             </tr>
                             <tr>
                                 
                                 <td class="label-td" colspan="2">
-                                    <label for="name" class="form-label">'.t('date_of_birth').': </label>
+                                    <label for="name" class="form-label">' . t('date_of_birth') . ': </label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label-td" colspan="2">
-                                    '.$dob.'<br><br>
+                                    ' . $dob . '<br><br>
                                 </td>
                                 
                             </tr>
@@ -454,12 +493,14 @@
             </div>
             </div>
             ';
-        
-    };
 
-?>
-</div>
+    }
+    ;
+
+    ?>
+    </div>
 
     <script src="../js/menu-toggle.js"></script>
 </body>
+
 </html>

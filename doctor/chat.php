@@ -75,6 +75,7 @@
     <link rel="stylesheet" href="../css/animations.css">  
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/doctor/common.css">
     <title>الدردشة المباشرة - الطبيب</title>
     <style>
         * {
@@ -84,7 +85,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -121,7 +122,20 @@
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-            border-left: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border-left: 1px solid rgba(24, 25, 129, 0.1) !important;
+        }
+        
+        .menu-active {
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+            color: white !important;
+        }
+        
+        .menu-active .menu-text {
+            color: white !important;
+        }
+        
+        .menu-active .non-style-link-menu {
+            color: white !important;
         }
         
         .dash-body {
@@ -154,7 +168,7 @@
         }
         
         .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             padding: 20px 30px;
             display: flex;
@@ -234,7 +248,7 @@
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             color: white !important;
             align-self: flex-end !important;
             margin-left: auto !important;
@@ -255,7 +269,7 @@
         .chat-input-container {
             padding: 20px 30px;
             background: white;
-            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            border-top: 1px solid rgba(24, 25, 129, 0.1);
             display: flex;
             gap: 15px;
             align-items: center;
@@ -264,7 +278,7 @@
         #messageInput {
             flex: 1;
             padding: 14px 20px;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(24, 25, 129, 0.2);
             border-radius: 25px;
             font-size: 15px;
             transition: all 0.3s ease;
@@ -272,13 +286,13 @@
         }
         
         #messageInput:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4a31b9;
+            box-shadow: 0 0 0 3px rgba(24, 25, 129, 0.1);
         }
         
         .send-btn {
             padding: 14px 35px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             border: none;
             border-radius: 25px;
@@ -286,12 +300,12 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(24, 25, 129, 0.3);
         }
         
         .send-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(24, 25, 129, 0.4);
         }
         
         .logout-btn {

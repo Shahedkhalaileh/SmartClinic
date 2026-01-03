@@ -85,6 +85,7 @@
     <link rel="stylesheet" href="../css/main.css">  
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/language.css">
+    <link rel="stylesheet" href="../css/doctor/common.css">
         
     <title><?php echo t('dashboard'); ?></title>
     <style>
@@ -95,7 +96,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -109,13 +110,14 @@
         }
         
         .container {
-            display: flex !important;
-            flex-direction: row !important;
-            width: 100% !important;
-            min-height: 100vh !important;
-            overflow: hidden !important;
-            position: relative !important;
-        }
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: relative !important;
+}
         
         .menu {
             width: 280px !important;
@@ -154,7 +156,7 @@
         }
         
         .menu-btn:hover {
-            background-color: rgba(102, 126, 234, 0.1) !important;
+            background-color: rgba(74, 49, 185, 0.15) !important;
             transform: translateX(5px) !important;
         }
         
@@ -167,7 +169,7 @@
         }
         
         .menu-btn:hover .menu-text {
-            color: #667eea !important;
+            color: #4a31b9 !important;
         }
         
         .non-style-link-menu {
@@ -176,12 +178,20 @@
         }
         
         .menu-active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+            color: white !important;
+        }
+        
+        .menu-active .menu-text {
+            color: white !important;
+        }
+        
+        .menu-active .non-style-link-menu {
             color: white !important;
         }
         
         .profile-container {
-            background: rgba(102, 126, 234, 0.05) !important;
+            background: rgba(24, 25, 129, 0.1) !important;
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
@@ -206,13 +216,16 @@
         }
         
         .dash-body {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(15px) !important;
-            border-radius: 25px !important;
-            margin: 20px !important;
-            padding: 30px !important;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1) !important;
-        }
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    border-radius: 25px !important;
+    margin: 20px !important;
+    padding: 30px !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1) !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
+    max-width: calc(100% - 320px) !important;
+}
         
         .filter-container, .doctor-header {
             background: rgba(255, 255, 255, 0.98) !important;
@@ -220,14 +233,14 @@
             border-radius: 20px !important;
             padding: 30px !important;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-            border: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border: 1px solid rgba(24, 25, 129, 0.15) !important;
         }
         
         .dashboard-items {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%) !important;
             border-radius: 15px !important;
             color: white !important;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+            box-shadow: 0 8px 25px rgba(24, 25, 129, 0.3) !important;
             transition: all 0.4s ease !important;
             border: none !important;
             padding: 15px !important;
@@ -237,7 +250,7 @@
         
         .dashboard-items:hover {
             transform: translateY(-8px) scale(1.02) !important;
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4) !important;
+            box-shadow: 0 15px 40px rgba(24, 25, 129, 0.4) !important;
         }
         
         .h1-dashboard {
@@ -282,20 +295,20 @@
             margin-left: 10px !important;
         }
         
-        .btn-primary, .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        .btn-primary, .login-btn, .btn-primary-soft {
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             border: none !important;
             border-radius: 25px !important;
             padding: 12px 30px !important;
             color: white !important;
             font-weight: 700 !important;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(74, 49, 185, 0.3) !important;
             transition: all 0.3s ease !important;
         }
         
-        .btn-primary:hover, .login-btn:hover {
+        .btn-primary:hover, .login-btn:hover, .btn-primary-soft:hover {
             transform: translateY(-3px) !important;
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
+            box-shadow: 0 12px 30px rgba(74, 49, 185, 0.4) !important;
         }
         
         .logout-btn {
@@ -311,7 +324,7 @@
         }
         
         .table-headin {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%) !important;
             color: white !important;
             font-weight: 700 !important;
             padding: 15px !important;
@@ -322,7 +335,7 @@
         }
         
         .sub-table tbody tr:hover {
-            background: rgba(102, 126, 234, 0.05) !important;
+            background: rgba(24, 25, 129, 0.08) !important;
             transform: scale(1.01) !important;
         }
         
@@ -333,7 +346,7 @@
         .nav-bar p {
             font-size: 28px !important;
             font-weight: 800 !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #4a31b9 0%, #0c0242 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             background-clip: text !important;
@@ -346,7 +359,7 @@
         h1 {
             font-size: 36px !important;
             font-weight: 800 !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #4a31b9 0%, #0c0242 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             background-clip: text !important;
@@ -355,7 +368,7 @@
         h3 {
             font-size: 24px !important;
             font-weight: 700 !important;
-            color: #667eea !important;
+            color: #4a31b9 !important;
         }
         
         p {
@@ -364,12 +377,12 @@
         }
         
         .non-style-link {
-            color: #667eea !important;
+            color: #4a31b9 !important;
             transition: color 0.3s !important;
         }
         
         .non-style-link:hover {
-            color: #764ba2 !important;
+            color: #0c0242 !important;
         }
         .dashbord-tables,.doctor-heade{
             animation: transitionIn-Y-over 0.5s;
@@ -385,7 +398,7 @@
             position: fixed !important;
             bottom: 25px !important;
             right: 25px !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             color: white !important;
             font-size: 24px !important;
             border-radius: 50% !important;
@@ -394,7 +407,7 @@
             text-align: center !important;
             line-height: 60px !important;
             cursor: pointer !important;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+            box-shadow: 0 4px 15px rgba(74, 49, 185, 0.4) !important;
             z-index: 999 !important;
             display: flex !important;
             align-items: center !important;
@@ -453,7 +466,7 @@
         
 
         #chatHeader {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -522,20 +535,54 @@
             flex: 1;
         }
         
-        .patient-select-chat option {
-            background: #667eea;
-            color: white;
-        }
-        
-        .patient-select-chat option.has-unread {
-            font-weight: 600;
-        }
-        
+  .patient-select-chat option {
+    background: #4a31b9;
+    color: white;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.patient-select-chat option.has-unread {
+    font-weight: 700 !important;
+    background: rgba(255, 68, 68, 0.9) !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* For selected option with unread messages */
+.patient-select-chat option.has-unread:checked {
+    background: rgba(255, 68, 68, 1) !important;
+}
+/* Patient notification badge in dropdown */
+.patient-option-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.patient-option-badge {
+    background: #ff4444;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 8px;
+    display: inline-block;
+}
+
+[dir="rtl"] .patient-option-badge {
+    margin-left: 0;
+    margin-right: 8px;
+}
+
+     
         #chatBox {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -547,7 +594,7 @@
         #chatBox:empty {
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
         }
         
         #chatBox .message-container {
@@ -589,7 +636,7 @@
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             color: white !important;
             align-self: flex-end !important;
             margin-left: auto !important;
@@ -632,23 +679,29 @@
         }
         
         #messageInput:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4a31b9;
+            box-shadow: 0 0 0 3px rgba(74, 49, 185, 0.1);
         }
         
         .send-btn-chat {
             padding: 12px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             border: none;
             border-radius: 25px;
             font-weight: 700;
             font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(74, 49, 185, 0.3);
         }
         .doctor-heade{
             animation: transitionIn-Y-over 0.5s;
+        }
+        
+      
+        
+        .menu-row {
+            position: relative;
         }
         
         /* Mobile Menu Toggle */
@@ -697,7 +750,48 @@
                 grid-template-columns: repeat(2, 1fr) !important;
             }
         }
+
         
+/* إشعارات القائمة الجانبية */
+.menu-notif-badge {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: #e74c3c;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.5);
+    animation: pulseBadge 1.5s infinite;
+    z-index: 10;
+}
+
+[dir="rtl"] .menu-notif-badge {
+    right: auto;
+    left: 12px;
+}
+
+.menu-row {
+    position: relative;
+}
+
+@keyframes pulseBadge {
+    0%, 100% {
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        transform: translateY(-50%) scale(1.1);
+    }
+}
+
         @media (max-width: 768px) {
             .menu-toggle {
                 display: block;
@@ -722,6 +816,7 @@
             .menu-overlay.active {
                 display: block;
             }
+
             
             .dash-body {
                 margin: 10px !important;
@@ -815,8 +910,9 @@
                 left: 2.5% !important;
             }
         }
-    </style>
-    <style>
+
+        
+ 
         .language-switcher-header {
             position: absolute;
             top: 15px;
@@ -903,11 +999,16 @@
                     </table>
                     </td>
                 </tr>
-                <tr class="menu-row" >
-                    <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active" >
-                        <a href="index.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text"><?php echo t('dashboard'); ?></p></div></a>
-                    </td>
-                </tr>
+              <tr class="menu-row">
+    <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active">
+        <a href="index.php" class="non-style-link-menu non-style-link-menu-active">
+            <div style="position: relative;">
+                <p class="menu-text"><?php echo t('dashboard'); ?></p>
+                <span class="menu-notif-badge" id="dashboardChatBadge"></span>
+            </div>
+        </a>
+    </td>
+</tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
                         <a href="appointment.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('my_appointments'); ?></p></a></div>
@@ -928,13 +1029,16 @@
                     <td class="menu-btn menu-icon-patient">
                         <a href="medical_record.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('medical_record_for_patient'); ?></p></a></div>
                     </td>
-                </tr>
-                <tr class="menu-row" >
-                    <td class="menu-btn menu-icon-settings">
-                        <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('settings'); ?></p></a></div>
-                    </td>
-                </tr>
-                
+                <tr class="menu-row">
+    <td class="menu-btn menu-icon-settings">
+        <a href="settings.php" class="non-style-link">
+            <div style="position: relative;">
+                <p class="menu-text"><?php echo t('settings'); ?></p>
+                <span class="menu-notif-badge" id="settingsNotifBadge"></span>
+            </div>
+        </a>
+    </td>
+</tr>
             </table>
         </div>
         <div class="dash-body" style="margin-top: 15px">
@@ -1207,7 +1311,7 @@
                 <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <div style="font-size: 56px; margin-bottom: 15px; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 6px 12px rgba(102, 126, 234, 0.3)); position: relative; z-index: 1;">👥</div>
-                <p style="font-size: 16px; font-weight: 800; color: #667eea; line-height: 1.6; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);"><?php echo t('no_patients_booked'); ?></p>
+                <p style="font-size: 16px; font-weight: 800; color: #4a31b9; line-height: 1.6; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(74, 49, 185, 0.1);"><?php echo t('no_patients_booked'); ?></p>
             </div>
         </div>
     <?php endif; ?></div>
@@ -1232,21 +1336,13 @@ chatBtn.addEventListener('click', () => {
     chatPopup.style.display = isOpen ? 'none' : 'flex';
     
     if (!isOpen) {
-        // Open chat - immediately hide notification badge
-        const badge = document.getElementById('chatNotificationBadge');
-        if (badge) {
-            badge.style.display = 'none';
-        }
+        // ✅ لا تخفي أي Badge عند فتح صندوق الدردشة فقط
+        // سيتم إخفاء Badge فقط عند اختيار مريض
         
         loadChatMessages();
-        // Mark messages as read when opening chat and update notifications
+        // Mark messages as read ONLY if patient is selected
         if (receiver > 0) {
             markAsRead();
-        } else {
-            // Update notifications even if no receiver selected
-            setTimeout(() => {
-                checkChatNotifications();
-            }, 200);
         }
         // Update unread indicators
         updateUnreadIndicators();
@@ -1258,10 +1354,8 @@ chatBtn.addEventListener('click', () => {
                 if (receiver > 0) {
                     markAsRead();
                 } else {
-                    // Update notifications periodically even if no receiver selected
                     checkChatNotifications();
                 }
-                // Update unread indicators periodically
                 updateUnreadIndicators();
             }
         }, 3000);
@@ -1291,17 +1385,29 @@ function changePatientChat() {
     receiver = parseInt(select.value);
     if (receiver > 0) {
         loadChatMessages();
+        
+        // ✅ هنا فقط يتم إخفاء Badge عند اختيار مريض محدد
+        const chatBadge = document.getElementById('chatNotificationBadge');
+        const dashboardBadge = document.getElementById('dashboardChatBadge');
+        
+        // Mark as read and update notifications
         markAsRead();
-        checkChatNotifications();
-        // Remove unread indicator from selected patient
-        const selectedOption = select.querySelector(`option[value="${receiver}"]`);
-        if (selectedOption) {
-            selectedOption.classList.remove('has-unread');
-            const originalText = selectedOption.getAttribute('data-original-text') || selectedOption.textContent.replace(' ●', '').trim();
-            selectedOption.textContent = originalText;
-        }
-        // Update all indicators
-        updateUnreadIndicators();
+        
+        // Small delay to ensure DB update completes
+        setTimeout(() => {
+            checkChatNotifications();
+            updateUnreadIndicators();
+            
+            // ✅ إخفاء Badge بعد تحديث الإشعارات
+            if (chatBadge && parseInt(chatBadge.textContent) === 0) {
+                chatBadge.style.display = 'none';
+            }
+            if (dashboardBadge && parseInt(dashboardBadge.textContent) === 0) {
+                dashboardBadge.style.display = 'none';
+            }
+        }, 400);
+        
+       
     } else {
         <?php if ($patients_count == 0): ?>
         showEmptyChatDesign();
@@ -1311,7 +1417,6 @@ function changePatientChat() {
         <?php endif; ?>
     }
 }
-
 function showEmptyChatDesign() {
     const chatBox = document.getElementById('chatBox');
     <?php if ($patients_count == 0): ?>
@@ -1321,7 +1426,7 @@ function showEmptyChatDesign() {
                 <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <div style="font-size: 56px; margin-bottom: 15px; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 6px 12px rgba(102, 126, 234, 0.3)); position: relative; z-index: 1;">👥</div>
-                <p style="font-size: 16px; font-weight: 800; color: #667eea; line-height: 1.6; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);"><?php echo t('no_patients_booked'); ?></p>
+                <p style="font-size: 16px; font-weight: 800; color: #4a31b9; line-height: 1.6; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 2px 4px rgba(74, 49, 185, 0.1);"><?php echo t('no_patients_booked'); ?></p>
             </div>
         </div>
     `;
@@ -1370,38 +1475,42 @@ function markAsRead() {
     if (receiver <= 0) return;
     fetch(`mark_read.php?sender=${receiver}&receiver=${sender}`)
         .then(() => {
-            // Update notifications after marking as read - use setTimeout to ensure DB update completes
+            // ✅ تحديث الإشعارات بعد قراءة الرسائل
             setTimeout(() => {
                 checkChatNotifications();
-            }, 300);
-            // Remove unread indicator from selected patient
-            const select = document.getElementById('patientSelectChat');
-            if (select) {
-                const selectedOption = select.querySelector(`option[value="${receiver}"]`);
-                if (selectedOption) {
-                    selectedOption.classList.remove('has-unread');
-                    const originalText = selectedOption.getAttribute('data-original-text') || selectedOption.textContent.replace(' ●', '').trim();
-                    selectedOption.textContent = originalText;
+                
+                // ✅ إخفاء Badge إذا لم تعد هناك رسائل جديدة
+                const chatBadge = document.getElementById('chatNotificationBadge');
+                const dashboardBadge = document.getElementById('dashboardChatBadge');
+                
+                if (chatBadge && parseInt(chatBadge.textContent || '0') === 0) {
+                    chatBadge.style.display = 'none';
                 }
-            }
+                if (dashboardBadge && parseInt(dashboardBadge.textContent || '0') === 0) {
+                    dashboardBadge.style.display = 'none';
+                }
+            }, 500);
         })
         .catch(err => {
             console.error('Error marking as read:', err);
         });
 }
+// ✅ متغيرات لتتبع العدد السابق لمنع الوميض
+let lastChatCount = -1;
+let lastAdminCount = -1;
 
+// ✅ تحديث Badge رسائل الدردشة في Dashboard
 function checkChatNotifications() {
-    const badge = document.getElementById('chatNotificationBadge');
-    if (!badge) return;
-    
-    // Hide badge by default
-    badge.style.display = 'none';
+    const chatBadge = document.getElementById('chatNotificationBadge');
+    const dashboardBadge = document.getElementById('dashboardChatBadge');
     
     if (!sender || sender <= 0) {
+        if (chatBadge) chatBadge.style.display = 'none';
+        if (dashboardBadge) dashboardBadge.style.display = 'none';
         return;
     }
     
-    fetch(`check_notifications.php?user_id=${sender}&user_type=doctor`)
+    fetch(`check_notifications.php?user_id=${sender}&user_type=doctor&t=${Date.now()}`)
         .then(res => {
             if (!res.ok) {
                 throw new Error('Network response was not ok');
@@ -1409,29 +1518,61 @@ function checkChatNotifications() {
             return res.json();
         })
         .then(data => {
-            if (!badge) return;
-            
-            // Ensure count is a valid number
             const count = parseInt(data.count) || 0;
             
-            // Only show badge if count is greater than 0
-            if (count > 0) {
-                badge.textContent = count > 99 ? '99+' : count.toString();
-                badge.style.display = 'flex';
-            } else {
-                // Explicitly hide badge when count is 0
-                badge.style.display = 'none';
-                badge.textContent = '0';
+            // ✅ فقط قم بالتحديث إذا تغير عدد الرسائل (لمنع الوميض)
+            if (count !== lastChatCount) {
+                lastChatCount = count;
+                
+                // Update chat button badge
+                if (chatBadge) {
+                    if (count > 0) {
+                        chatBadge.textContent = count > 99 ? '99+' : count.toString();
+                        chatBadge.style.display = 'flex';
+                    } else {
+                        chatBadge.style.display = 'none';
+                    }
+                }
+                
+                // Update dashboard menu badge
+                if (dashboardBadge) {
+                    if (count > 0) {
+                        dashboardBadge.textContent = count > 99 ? '99+' : count.toString();
+                        dashboardBadge.style.display = 'flex';
+                    } else {
+                        dashboardBadge.style.display = 'none';
+                    }
+                }
             }
         })
         .catch(err => {
             console.error('Error checking notifications:', err);
-            // في حالة الخطأ، أخفي الإشعار
-            if (badge) {
-                badge.style.display = 'none';
-                badge.textContent = '0';
-            }
         });
+}
+
+// ✅ تحديث Badge رسائل الأدمن في Settings
+function updateAdminMessages() {
+    const settingsBadge = document.getElementById('settingsNotifBadge');
+    
+    fetch(`get_admin_messages_count.php?docid=${sender}`)
+        .then(r => r.json())
+        .then(data => {
+            const count = parseInt(data.admin_unread) || 0;
+            
+            if (count !== lastAdminCount) {
+                lastAdminCount = count;
+                
+                if (settingsBadge) {
+                    if (data.status === "ok" && count > 0) {
+                        settingsBadge.textContent = count > 99 ? '99+' : count.toString();
+                        settingsBadge.style.display = "flex";
+                    } else {
+                        settingsBadge.style.display = "none";
+                    }
+                }
+            }
+        })
+        .catch(err => console.error("❌ خطأ:", err));
 }
 
 function updateUnreadIndicators() {
@@ -1442,28 +1583,27 @@ function updateUnreadIndicators() {
     options.forEach(option => {
         const patientId = parseInt(option.getAttribute('data-patient-id'));
         if (patientId > 0) {
-            const originalText = option.getAttribute('data-original-text') || option.textContent.replace(' ●', '').trim();
-            if (!option.getAttribute('data-original-text')) {
-                option.setAttribute('data-original-text', originalText);
-            }
-            
             fetch(`check_unread_by_patient.php?user_id=${sender}&patient_id=${patientId}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.has_unread) {
+                    const originalText = option.getAttribute('data-original-text');
+                    
+                    if (data.has_unread && data.unread_count > 0) {
+                        // Show badge with count
                         option.classList.add('has-unread');
-                        if (!option.textContent.includes('●')) {
-                            option.textContent = originalText + ' ●';
-                        }
+                        option.textContent = `${originalText} (${data.unread_count})`;
                     } else {
+                        // Remove badge
                         option.classList.remove('has-unread');
                         option.textContent = originalText;
                     }
+                })
+                .catch(err => {
+                    console.error('Error checking unread for patient:', err);
                 });
         }
     });
 }
-
 function sendChatMessage(e) {
     if (e) {
         e.preventDefault();
@@ -1512,11 +1652,18 @@ function sendChatMessage(e) {
 }
 
 
-// Check notifications every 3 seconds
-setInterval(checkChatNotifications, 3000);
-
-// Initial load - don't load messages if no patient selected
-checkChatNotifications();
+// ✅ تحديث تلقائي كل 3 ثوانٍ
+document.addEventListener("DOMContentLoaded", function() {
+    // تحديث فوري عند تحميل الصفحة
+    checkChatNotifications();
+    updateAdminMessages();
+    
+    // تحديث دوري كل 3 ثوانٍ
+    setInterval(function() {
+        checkChatNotifications();
+        updateAdminMessages();
+    }, 3000);
+});
 
 // Send message on Enter key
 const messageInput = document.getElementById('messageInput');

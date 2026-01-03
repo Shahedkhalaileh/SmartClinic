@@ -61,7 +61,7 @@
     }
     
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
         background-size: 200% 200%;
         animation: gradientShift 15s ease infinite;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -91,7 +91,7 @@
         background: rgba(255, 255, 255, 0.98) !important;
         backdrop-filter: blur(15px) !important;
         box-shadow: 4px 0 30px rgba(0, 0, 0, 0.08) !important;
-        border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+        border-right: 1px solid rgba(24, 25, 129, 0.1) !important;
         padding: 20px 0 !important;
         position: relative !important;
         height: 100vh !important;
@@ -122,7 +122,7 @@
     }
     
     .menu-btn:hover {
-        background-color: rgba(102, 126, 234, 0.1) !important;
+        background-color: rgba(24, 25, 129, 0.1) !important;
         transform: translateX(5px) !important;
     }
     
@@ -135,7 +135,7 @@
     }
     
     .menu-btn:hover .menu-text {
-        color: #667eea !important;
+        color: #4a31b9 !important;
     }
     
     .non-style-link-menu {
@@ -170,7 +170,7 @@
     }
     
     .non-style-link-menu:hover {
-        color: #667eea !important;
+        color: #4a31b9 !important;
     }
     
     .menu-active .non-style-link-menu {
@@ -197,17 +197,25 @@
     }
     
     .menu-btn:hover {
-        background: rgba(102, 126, 234, 0.1) !important;
+        background: rgba(24, 25, 129, 0.1) !important;
         transform: translateX(5px) !important;
     }
     
-    .menu-active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-    }
+        .menu-active {
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+            color: white !important;
+        }
+        
+        .menu-active .menu-text {
+            color: white !important;
+        }
+        
+        .menu-active .non-style-link-menu {
+            color: white !important;
+        }
     
     .profile-container {
-        background: rgba(102, 126, 234, 0.05) !important;
+        background: rgba(24, 25, 129, 0.05) !important;
         border-radius: 15px !important;
         padding: 15px !important;
         margin: 10px !important;
@@ -271,7 +279,7 @@
       text-align: center;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
       transition: all 0.4s ease;
-      border: 2px solid rgba(102, 126, 234, 0.1);
+      border: 2px solid rgba(24, 25, 129, 0.1);
       position: relative;
       overflow: hidden;
       cursor: pointer;
@@ -301,9 +309,9 @@
 
     .card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
-      border-color: #667eea;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+      box-shadow: 0 15px 40px rgba(24, 25, 129, 0.25);
+      border-color: #4a31b9;
+      background: linear-gradient(135deg, rgba(24, 25, 129, 0.02) 0%, rgba(16, 2, 66, 0.02) 100%);
     }
 
     .card-icon {
@@ -353,13 +361,13 @@
       padding: 12px 30px !important;
       color: white !important;
       font-weight: 700 !important;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+      box-shadow: 0 4px 15px rgba(24, 25, 129, 0.3) !important;
       transition: all 0.3s ease !important;
     }
     
     .btn-primary:hover, .login-btn:hover, .btn-primary-soft:hover {
       transform: translateY(-3px) !important;
-      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
+      box-shadow: 0 12px 30px rgba(24, 25, 129, 0.5) !important;
     }
 
     .book-btn {
@@ -373,14 +381,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 20px;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 15px rgba(24, 25, 129, 0.3);
       text-decoration: none;
       display: inline-block;
     }
 
     .book-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 6px 20px rgba(24, 25, 129, 0.4);
     }
 
     a {
@@ -616,6 +624,11 @@
     <tr class="menu-row">
       <td class="menu-btn menu-icon-appoinment menu-active menu-icon-specialties-active ">
         <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></div></a>
+      </td>
+    </tr>
+    <tr class="menu-row">
+      <td class="menu-btn menu-icon-ai">
+        <a href="chatbot.php" class="non-style-link-menu"><div><p class="menu-text">Chat Bot</p></div></a>
       </td>
     </tr>
     <tr class="menu-row">

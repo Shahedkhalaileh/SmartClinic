@@ -19,25 +19,26 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 16px;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border: 2px solid rgba(102, 126, 234, 0.3);
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 25px;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 14px;
-        color: #667eea;
+        color: #ffffff;
         text-decoration: none;
         backdrop-filter: blur(10px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2);
     }
     
     .lang-toggle:hover {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-        border-color: rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #5568d3 0%, #653a8f 100%);
+        border-color: rgba(255, 255, 255, 0.5);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.25);
+        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3);
+        color: #ffffff;
     }
     
     .lang-toggle:active {
@@ -49,37 +50,40 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
-        background: rgba(102, 126, 234, 0.15);
+        background: rgba(255, 255, 255, 0.25);
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     .lang-toggle:hover .lang-icon {
-        background: rgba(102, 126, 234, 0.25);
-        transform: rotate(360deg);
+        background: rgba(255, 255, 255, 0.35);
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
     }
     
     .lang-text {
         font-weight: 700;
         letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     .lang-dropdown {
         position: absolute;
         top: calc(100% + 10px);
         right: 0;
-        background: rgba(255, 255, 255, 0.98);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
         backdrop-filter: blur(20px);
         border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         min-width: 180px;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
         transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        border: 2px solid rgba(102, 126, 234, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
         overflow: hidden;
     }
     
@@ -94,10 +98,10 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
         align-items: center;
         gap: 12px;
         padding: 12px 18px;
-        color: #333;
+        color: #ffffff;
         text-decoration: none;
         transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(102, 126, 234, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
         overflow: hidden;
     }
@@ -113,15 +117,15 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
         top: 0;
         height: 100%;
         width: 4px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
         transform: scaleY(0);
         transition: transform 0.3s ease;
     }
     
     .lang-option:hover {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
         padding-left: 22px;
-        color: #667eea;
+        color: #ffffff;
     }
     
     .lang-option:hover::before {
@@ -129,8 +133,8 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
     }
     
     .lang-option.active {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.12) 100%);
-        color: #667eea;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+        color: #ffffff;
         font-weight: 700;
     }
     
@@ -142,12 +146,12 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        background: rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
     }
     
     .lang-option:hover .lang-option-icon {
-        background: rgba(102, 126, 234, 0.2);
+        background: rgba(255, 255, 255, 0.3);
         transform: scale(1.1);
     }
     
@@ -158,11 +162,12 @@ $separator = strpos($current_page, '?') !== false ? '&' : '?';
     }
     
     .lang-check {
-        color: #667eea;
+        color: #ffffff;
         font-size: 16px;
         opacity: 0;
         transform: scale(0);
         transition: all 0.3s ease;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     .lang-option.active .lang-check {

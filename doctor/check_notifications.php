@@ -1,60 +1,65 @@
 <?php
 session_start();
-include '../connection.php';
+include("../connection.php");
 
-// Check if messages table exists, if not create it
-$table_check = $database->query("SHOW TABLES LIKE 'messages'");
-if ($table_check->num_rows == 0) {
-    $create_table = "CREATE TABLE IF NOT EXISTS `messages` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `sender_id` int(11) NOT NULL,
-        `receiver_id` int(11) NOT NULL,
-        `message` text NOT NULL,
-        `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-        `is_read` TINYINT(1) DEFAULT 0,
-        `sender_type` VARCHAR(10) DEFAULT 'patient',
-        `receiver_type` VARCHAR(10) DEFAULT 'doctor',
-        PRIMARY KEY (`id`),
-        KEY `sender_id` (`sender_id`),
-        KEY `receiver_id` (`receiver_id`),
-        KEY `is_read` (`is_read`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-    $database->query($create_table);
-}
+header('Content-Type: application/json');
 
 $user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
-$user_type = isset($_GET['user_type']) ? $_GET['user_type'] : 'doctor';
+$user_type = isset($_GET['user_type']) ? $_GET['user_type'] : '';
 
-if ($user_id > 0) {
-    // Check if is_read column exists
-    $check_column = $database->query("SHOW COLUMNS FROM messages LIKE 'is_read'");
-    
-    if ($check_column->num_rows > 0) {
-        // Count unread messages that were RECEIVED by this user (not sent by them)
-        // This ensures notifications only show for messages received, not sent
-        $query = "SELECT COUNT(*) as count FROM messages 
-                  WHERE receiver_id = ? AND sender_id != ? AND is_read = 0";
-        $stmt = $database->prepare($query);
-        $stmt->bind_param("ii", $user_id, $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        
-        echo json_encode(['count' => intval($row['count'])]);
+if ($user_id <= 0) {
+    echo json_encode(['count' => 0, 'error' => 'Invalid user_id']);
+    exit;
+}
+
+try {
+    if ($user_type === 'doctor') {
+        // Count ALL unread messages from ALL patients to this doctor
+        $query = "SELECT COUNT(*) as total 
+                  FROM messages 
+                  WHERE receiver_id = ? 
+                  AND receiver_type = 'doctor' 
+                  AND is_read = 0";
+    } else if ($user_type === 'patient') {
+        // Count ALL unread messages from doctor to this patient
+        $query = "SELECT COUNT(*) as total 
+                  FROM messages 
+                  WHERE receiver_id = ? 
+                  AND receiver_type = 'patient' 
+                  AND is_read = 0";
     } else {
-        // If is_read column doesn't exist, count all unread messages
-        $query = "SELECT COUNT(*) as count FROM messages 
-                  WHERE receiver_id = ? AND sender_id != ?";
-        $stmt = $database->prepare($query);
-        $stmt->bind_param("ii", $user_id, $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        
-        echo json_encode(['count' => intval($row['count'])]);
+        echo json_encode(['count' => 0, 'error' => 'Invalid user_type']);
+        exit;
     }
-} else {
-    echo json_encode(['count' => 0]);
+    
+    $stmt = $database->prepare($query);
+    if (!$stmt) {
+        throw new Exception("Prepare failed: " . $database->error);
+    }
+    
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
+    
+    $count = (int)$row['total'];
+    
+    echo json_encode([
+        'count' => $count, 
+        'success' => true,
+        'debug' => [
+            'user_id' => $user_id,
+            'user_type' => $user_type,
+            'query_executed' => true
+        ]
+    ]);
+    
+} catch (Exception $e) {
+    echo json_encode([
+        'count' => 0, 
+        'success' => false, 
+        'error' => $e->getMessage()
+    ]);
 }
 ?>
-

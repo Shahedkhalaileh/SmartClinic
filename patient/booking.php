@@ -54,7 +54,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +83,7 @@
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px) !important;
             box-shadow: 4px 0 30px rgba(0, 0, 0, 0.08) !important;
-            border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border-right: 1px solid rgba(24, 25, 129, 0.1) !important;
             padding: 20px 0 !important;
             position: relative !important;
             height: 100vh !important;
@@ -127,7 +127,7 @@
         }
         
         .menu-btn:hover {
-            background-color: rgba(102, 126, 234, 0.1) !important;
+            background-color: rgba(24, 25, 129, 0.1) !important;
             transform: translateX(5px) !important;
         }
         
@@ -140,7 +140,7 @@
         }
         
         .menu-btn:hover .menu-text {
-            color: #667eea !important;
+            color: #4a31b9 !important;
         }
         
         .non-style-link-menu {
@@ -149,7 +149,7 @@
         }
         
         .profile-container {
-            background: rgba(102, 126, 234, 0.05) !important;
+            background: rgba(24, 25, 129, 0.05) !important;
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
@@ -207,14 +207,14 @@
             border-radius: 20px !important;
             padding: 15px !important;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-            border: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border: 1px solid rgba(24, 25, 129, 0.1) !important;
         }
         
         .dashboard-items {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             border-radius: 15px !important;
             color: white !important;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+            box-shadow: 0 8px 25px rgba(24, 25, 129, 0.3) !important;
             transition: all 0.4s ease !important;
             border: none !important;
             padding: 15px !important;
@@ -222,7 +222,7 @@
         
         .dashboard-items:hover {
             transform: translateY(-8px) scale(1.02) !important;
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4) !important;
+            box-shadow: 0 15px 40px rgba(24, 25, 129, 0.4) !important;
         }
         
         .h1-search {
@@ -238,33 +238,33 @@
         }
         
         .btn-primary, .login-btn, .btn-primary-soft {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             border: none !important;
             border-radius: 25px !important;
             padding: 12px 30px !important;
             color: white !important;
             font-weight: 700 !important;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(24, 25, 129, 0.3) !important;
             transition: all 0.3s ease !important;
             cursor: pointer !important;
         }
         
         .btn-primary:hover, .login-btn:hover, .btn-primary-soft:hover {
             transform: translateY(-3px) !important;
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
+            box-shadow: 0 12px 30px rgba(24, 25, 129, 0.5) !important;
         }
         
         .input-text {
             border-radius: 12px !important;
-            border: 2px solid rgba(102, 126, 234, 0.2) !important;
+            border: 2px solid rgba(24, 25, 129, 0.2) !important;
             padding: 12px 18px 12px 45px !important;
             transition: all 0.3s ease !important;
         }
         
         .input-text:focus {
             outline: none !important;
-            border-color: #667eea !important;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+            border-color: #4a31b9 !important;
+            box-shadow: 0 0 0 3px rgba(24, 25, 129, 0.1) !important;
         }
         
         @keyframes slideIn {
@@ -469,6 +469,11 @@
                   <tr class="menu-row" >
                     <td class="menu-btn menu-icon-appoinment">
                         <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text"><?php echo t('specialties'); ?></p></a></div>
+                    </td>
+                </tr>
+                <tr class="menu-row" >
+                    <td class="menu-btn menu-icon-ai">
+                        <a href="chatbot.php" class="non-style-link-menu"><div><p class="menu-text">Chat Bot</p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row" >

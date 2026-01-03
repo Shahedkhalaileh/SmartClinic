@@ -27,7 +27,7 @@
     
     // Check if database exists, if not create it
     $result = $server->query("SHOW DATABASES LIKE '$database_name'");
-    if ($result->num_rows == 0) {
+    if ($result && $result->num_rows == 0) {
         // Database doesn't exist, create it
         if ($server->query("CREATE DATABASE IF NOT EXISTS `$database_name` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")) {
             // Database created successfully
@@ -46,5 +46,12 @@
     }
     
     // Set charset to UTF-8 for proper Arabic support
-    $database->set_charset("utf8mb4");
+    if (!$database->set_charset("utf8mb4")) {
+        die("❌ خطأ في تعيين الترميز UTF-8: " . $database->error);
+    }
+    
+    // Verify connection is working
+    if (!$database->ping()) {
+        die("❌ فشل التحقق من الاتصال بقاعدة البيانات");
+    }
 ?>

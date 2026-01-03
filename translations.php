@@ -32,26 +32,26 @@ $translations = [
         'appointment' => 'Appointment',
         'patients' => 'Patients',
         'settings' => 'Settings',
-        
+
         // Hero Section
         'hero_title' => 'Your Health, Our Priority',
         'hero_subtitle' => 'Experience world-class healthcare with our expert medical team',
         'book_appointment' => 'Book Appointment',
         'view_specialties' => 'View Specialties',
-        
+
         // Statistics
         'expert_doctors' => 'Expert Doctors',
         'medical_specialties' => 'Medical Specialties',
         'happy_patients' => 'Happy Patients',
         'appointments' => 'Appointments',
-        
+
         // Sections
         'our_medical_specialties' => 'Our Medical Specialties',
         'our_expert_doctors' => 'Our Expert Doctors',
         'why_choose_us' => 'Why Choose Smart Clinic?',
         'select_a_specialty' => 'Select a Specialty',
         'view_doctors' => 'View Doctors',
-        
+
         // Features
         'quick_appointments' => 'Quick Appointments',
         'quick_appointments_desc' => 'Book your appointment online in minutes, no waiting in queues.',
@@ -63,10 +63,10 @@ $translations = [
         'easy_management_desc' => 'Manage your appointments, view medical records, and chat with doctors all in one place.',
         'direct_communication' => 'Direct Communication',
         'direct_communication_desc' => 'Chat directly with your doctor for consultations and follow-ups.',
-        
+
         // Footer
         'copyright' => '© 2024 Smart Clinic. All rights reserved.',
-        
+
         // Common
         'search' => 'Search',
         'search_doctor' => 'Search Doctor name or Email',
@@ -80,7 +80,7 @@ $translations = [
         'book_now' => 'Book Now',
         'no_specialties' => 'No specialties available at the moment.',
         'no_doctors' => 'No doctors available at the moment.',
-        
+
         // Admin Dashboard
         'administrator' => 'Administrator',
         'todays_date' => "Today's Date",
@@ -94,7 +94,7 @@ $translations = [
         'no_sessions_found' => "We couldn't find anything related to your keywords !",
         'show_all_sessions' => 'Show all Sessions',
         'back' => 'Back',
-        
+
         // Admin Pages
         'appointment_manager' => 'Appointment Manager',
         'all_patients' => 'All Patients',
@@ -152,7 +152,7 @@ $translations = [
         'session_name_placeholder' => 'Name of this Session',
         'session_placed' => 'Session Placed.',
         'was_scheduled' => 'was scheduled.',
-        
+
         // Patient Pages
         'my_appointments' => 'My Appointments',
         'book_appointment_now' => 'Book Appointment Now',
@@ -234,7 +234,7 @@ $translations = [
         'you_want_to_cancel_this_appointment' => 'You want to Cancel this Appointment?',
         'session_name_label' => 'Session Name:',
         'doctor_name_label' => 'Doctor name',
-        
+
         // Settings Pages
         'account_settings' => 'Account Settings',
         'edit_account_details' => 'Edit your Account Details & Change Password',
@@ -247,7 +247,7 @@ $translations = [
         'you_want_to_delete_your_account' => 'You want to delete Your Account',
         'reset' => 'Reset',
         'ok' => 'OK',
-        
+
         // Error Messages
         'error_email_exists' => 'Already have an account for this Email address.',
         'error_password_mismatch' => 'Password Confirmation Error! Reconfirm Password',
@@ -256,7 +256,7 @@ $translations = [
         'error_invalid_email' => 'Please enter a valid email address.',
         'success_record_added' => 'New Record Added Successfully!',
         'success_record_edited' => 'Edit Successfully!',
-        
+
         // Form Labels
         'add_new_doctor' => 'Add New Doctor',
         'edit_doctor_details' => 'Edit Doctor Details',
@@ -279,14 +279,29 @@ $translations = [
         'confirm_password' => 'Confirm Password',
         'identification_must_be_10_digits' => 'Identification Number must be exactly 10 digits',
         'example_phone' => 'ex: 0712345678',
-        
+
         // Schedule View
         'doctor_of_this_session' => 'Doctor of this session',
         'scheduled_date' => 'Scheduled Date',
         'scheduled_time' => 'Scheduled Time',
         'patients_already_registered' => 'Patients that Already registered for this session',
+
+        'admin_messages' => 'Admin Messages',
+        'chat' => 'Chat',
+        'chat_with' => 'Chat with',
+        'type_message' => 'Type a message...',
+        'send' => 'Send',
+        'no_messages_yet' => 'No messages yet',
+        'no_doctors_found' => 'No Doctors Found!',
+        'no_patients_found' => 'No Patients Found!',
+        'message_sent_success' => 'Message sent successfully!',
+        'failed_send_message' => 'Failed to send message',
+        'connection_error' => 'Connection error',
+        'sending' => 'Sending...',
+        'search_doctor_patient' => 'Search Doctor or Patient name',
+
     ],
-    
+
     'ar' => [
         // Navigation
         'home' => 'الرئيسية',
@@ -301,26 +316,26 @@ $translations = [
         'appointment' => 'المواعيد',
         'patients' => 'المرضى',
         'settings' => 'الإعدادات',
-        
+
         // Hero Section
         'hero_title' => 'صحتك، أولويتنا',
         'hero_subtitle' => 'استمتع برعاية صحية عالمية المستوى مع فريقنا الطبي المختص',
         'book_appointment' => 'احجز موعد',
         'view_specialties' => 'عرض التخصصات',
-        
+
         // Statistics
         'expert_doctors' => 'أطباء متخصصون',
         'medical_specialties' => 'تخصصات طبية',
         'happy_patients' => 'مرضى راضون',
         'appointments' => 'المواعيد',
-        
+
         // Sections
         'our_medical_specialties' => 'التخصصات الطبية لدينا',
         'our_expert_doctors' => 'أطباؤنا المتخصصون',
         'why_choose_us' => 'لماذا تختار العيادة الذكية؟',
         'select_a_specialty' => 'اختر تخصصاً',
         'view_doctors' => 'عرض الأطباء',
-        
+
         // Features
         'quick_appointments' => 'مواعيد سريعة',
         'quick_appointments_desc' => 'احجز موعدك عبر الإنترنت في دقائق، بدون انتظار في الطوابير.',
@@ -332,10 +347,10 @@ $translations = [
         'easy_management_desc' => 'قم بإدارة مواعيدك وعرض السجلات الطبية والدردشة مع الأطباء في مكان واحد.',
         'direct_communication' => 'تواصل مباشر',
         'direct_communication_desc' => 'تحدث مباشرة مع طبيبك للاستشارات والمتابعات.',
-        
+
         // Footer
         'copyright' => '© 2024 العيادة الذكية. جميع الحقوق محفوظة.',
-        
+
         // Common
         'search' => 'بحث',
         'search_doctor' => 'ابحث عن اسم الطبيب أو البريد الإلكتروني',
@@ -349,7 +364,7 @@ $translations = [
         'book_now' => 'احجز الآن',
         'no_specialties' => 'لا توجد تخصصات متاحة حالياً.',
         'no_doctors' => 'لا يوجد أطباء متاحون حالياً.',
-        
+
         // Admin Dashboard
         'administrator' => 'المدير',
         'todays_date' => 'تاريخ اليوم',
@@ -363,7 +378,7 @@ $translations = [
         'no_sessions_found' => 'لم نتمكن من العثور على أي شيء متعلق بكلماتك البحثية!',
         'show_all_sessions' => 'عرض جميع الجلسات',
         'back' => 'رجوع',
-        
+
         // Admin Pages
         'appointment_manager' => 'إدارة المواعيد',
         'all_patients' => 'جميع المرضى',
@@ -423,7 +438,7 @@ $translations = [
         'session_name_placeholder' => 'اسم هذه الجلسة',
         'session_placed' => 'تم جدولة الجلسة.',
         'was_scheduled' => 'تم جدولته.',
-        
+
         // Patient Pages
         'my_appointments' => 'مواعيدي',
         'book_appointment_now' => 'احجز موعد الآن',
@@ -505,7 +520,7 @@ $translations = [
         'you_want_to_cancel_this_appointment' => 'هل تريد إلغاء هذا الموعد؟',
         'session_name_label' => 'اسم الجلسة:',
         'doctor_name_label' => 'اسم الطبيب',
-        
+
         // Settings Pages
         'account_settings' => 'إعدادات الحساب',
         'edit_account_details' => 'تعديل بيانات حسابك وتغيير كلمة المرور',
@@ -518,7 +533,7 @@ $translations = [
         'you_want_to_delete_your_account' => 'أنت تريد حذف حسابك',
         'reset' => 'إعادة تعيين',
         'ok' => 'موافق',
-        
+
         // Error Messages
         'error_email_exists' => 'يوجد بالفعل حساب لهذا البريد الإلكتروني.',
         'error_password_mismatch' => 'خطأ في تأكيد كلمة المرور! يرجى إعادة تأكيد كلمة المرور',
@@ -527,7 +542,7 @@ $translations = [
         'error_invalid_email' => 'الرجاء إدخال عنوان بريد إلكتروني صحيح.',
         'success_record_added' => 'تمت إضافة السجل الجديد بنجاح!',
         'success_record_edited' => 'تم التعديل بنجاح!',
-        
+
         // Form Labels
         'add_new_doctor' => 'إضافة طبيب جديد',
         'edit_doctor_details' => 'تعديل بيانات الطبيب',
@@ -550,12 +565,26 @@ $translations = [
         'confirm_password' => 'تأكيد كلمة المرور',
         'identification_must_be_10_digits' => 'يجب أن يكون رقم الهوية 10 أرقام بالضبط',
         'example_phone' => 'مثال: 0712345678',
-        
+
         // Schedule View
         'doctor_of_this_session' => 'طبيب هذه الجلسة',
         'scheduled_date' => 'التاريخ المحدد',
         'scheduled_time' => 'الوقت المحدد',
         'patients_already_registered' => 'المرضى المسجلون بالفعل لهذه الجلسة',
+
+        'admin_messages' => 'رسائل الإدارة',
+        'chat' => 'محادثة',
+        'chat_with' => 'محادثة مع',
+        'type_message' => 'اكتب رسالة...',
+        'send' => 'إرسال',
+        'no_messages_yet' => 'لا توجد رسائل بعد',
+        'no_doctors_found' => 'لم يتم العثور على أطباء!',
+        'no_patients_found' => 'لم يتم العثور على مرضى!',
+        'message_sent_success' => 'تم إرسال الرسالة بنجاح!',
+        'failed_send_message' => 'فشل إرسال الرسالة',
+        'connection_error' => 'خطأ في الاتصال',
+        'sending' => 'جاري الإرسال...',
+        'search_doctor_patient' => 'بحث عن طبيب أو مريض',
     ]
 ];
 
@@ -616,7 +645,8 @@ $specialty_translations = [
 ];
 
 // Function to translate specialty name
-function translateSpecialty($specialty_name) {
+function translateSpecialty($specialty_name)
+{
     global $specialty_translations, $current_lang;
     if (isset($specialty_translations[$current_lang][$specialty_name])) {
         return $specialty_translations[$current_lang][$specialty_name];
@@ -626,7 +656,8 @@ function translateSpecialty($specialty_name) {
 }
 
 // Function to get icon for specialty based on name
-function getSpecialtyIcon($specialty_name) {
+function getSpecialtyIcon($specialty_name)
+{
     $specialty_icons = [
         'Accident and emergency medicine' => '🚑',
         'Paediatrics' => '👶',
@@ -658,12 +689,12 @@ function getSpecialtyIcon($specialty_name) {
         'Gynecology' => '👩',
         'Orthopedics' => '🦴',
     ];
-    
+
     // Check for exact match first
     if (isset($specialty_icons[$specialty_name])) {
         return $specialty_icons[$specialty_name];
     }
-    
+
     // Check for partial matches (case insensitive)
     $specialty_lower = strtolower($specialty_name);
     foreach ($specialty_icons as $key => $icon) {
@@ -671,13 +702,14 @@ function getSpecialtyIcon($specialty_name) {
             return $icon;
         }
     }
-    
+
     // Default icon if no match found
     return '🩺';
 }
 
 // Function to get translation
-function t($key, $default = '') {
+function t($key, $default = '')
+{
     global $translations, $current_lang;
     if (isset($translations[$current_lang][$key])) {
         return $translations[$current_lang][$key];
@@ -686,14 +718,15 @@ function t($key, $default = '') {
 }
 
 // Function to get current language
-function getLang() {
+function getLang()
+{
     global $current_lang;
     return $current_lang;
 }
 
 // Function to check if current language is Arabic
-function isArabic() {
+function isArabic()
+{
     return getLang() === 'ar';
 }
 ?>
-

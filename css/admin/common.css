@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
     background-size: 200% 200%;
     animation: gradientShift 15s ease infinite;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,7 +35,7 @@ body {
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(15px) !important;
     box-shadow: 4px 0 30px rgba(0, 0, 0, 0.08) !important;
-    border-right: 1px solid rgba(102, 126, 234, 0.1) !important;
+    border-right: 1px solid rgba(24, 25, 129, 0.2) !important;
     padding: 20px 0 !important;
     position: relative !important;
     height: 100vh !important;
@@ -66,7 +66,7 @@ body {
 }
 
 .menu-btn:hover {
-    background-color: rgba(102, 126, 234, 0.1) !important;
+    background-color: rgba(74, 49, 185, 0.15) !important;
     transform: translateX(5px) !important;
 }
 
@@ -79,7 +79,7 @@ body {
 }
 
 .menu-btn:hover .menu-text {
-    color: #667eea !important;
+    color: #4a31b9 !important;
 }
 
 .non-style-link-menu {
@@ -88,12 +88,20 @@ body {
 }
 
 .menu-active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+    color: white !important;
+}
+
+.menu-active .menu-text {
+    color: white !important;
+}
+
+.menu-active .non-style-link-menu {
     color: white !important;
 }
 
 .profile-container {
-    background: rgba(102, 126, 234, 0.05) !important;
+    background: rgba(24, 25, 129, 0.1) !important;
     border-radius: 15px !important;
     padding: 15px !important;
     margin: 10px !important;
@@ -115,7 +123,7 @@ body {
     border-radius: 20px !important;
     padding: 30px !important;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-    border: 1px solid rgba(102, 126, 234, 0.1) !important;
+    border: 1px solid rgba(24, 25, 129, 0.15) !important;
 }
 
 .filter-container tr td {
@@ -134,7 +142,7 @@ body {
 }
 
 .table-headin {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%) !important;
     color: white !important;
     font-weight: 700 !important;
     padding: 15px !important;
@@ -145,38 +153,46 @@ body {
 }
 
 .sub-table tbody tr:hover {
-    background: rgba(102, 126, 234, 0.05) !important;
+    background: rgba(24, 25, 129, 0.08) !important;
     transform: scale(1.01) !important;
 }
 
 .btn-primary, .login-btn, .btn-primary-soft {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
     border: none !important;
     border-radius: 25px !important;
     padding: 12px 30px !important;
     color: white !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(74, 49, 185, 0.3) !important;
     transition: all 0.3s ease !important;
 }
 
 .btn-primary:hover, .login-btn:hover, .btn-primary-soft:hover {
     transform: translateY(-3px) !important;
-    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5) !important;
+    box-shadow: 0 12px 30px rgba(74, 49, 185, 0.4) !important;
 }
 
 .btn-primary-soft {
-    background: rgba(102, 126, 234, 0.1) !important;
-    color: #667eea !important;
-    border: 2px solid rgba(102, 126, 234, 0.2) !important;
+    background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 12px 30px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(74, 49, 185, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
 .btn-primary-soft:hover {
-    background: rgba(102, 126, 234, 0.2) !important;
+    background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+    color: white !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 30px rgba(74, 49, 185, 0.4) !important;
 }
 
 .input-text, .filter-container-items, .header-searchbar {
-    border: 2px solid rgba(102, 126, 234, 0.2) !important;
+    border: 2px solid rgba(24, 25, 129, 0.2) !important;
     border-radius: 10px !important;
     padding: 12px 15px !important;
     font-size: 15px !important;
@@ -193,8 +209,8 @@ body {
 
 .input-text:focus, .filter-container-items:focus, .header-searchbar:focus {
     outline: none !important;
-    border-color: #667eea !important;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    border-color: #4a31b9 !important;
+    box-shadow: 0 0 0 3px rgba(74, 49, 185, 0.1) !important;
     color: #333 !important;
     background-color: #fff !important;
 }
@@ -276,7 +292,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .nav-bar p {
     font-size: 28px !important;
     font-weight: 800 !important;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(135deg, #4a31b9 0%, #0c0242 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
@@ -288,12 +304,12 @@ p {
 }
 
 .non-style-link {
-    color: #667eea !important;
+    color: #4a31b9 !important;
     transition: color 0.3s !important;
 }
 
 .non-style-link:hover {
-    color: #764ba2 !important;
+    color: #0c0242 !important;
 }
 
 .dashbord-tables {
@@ -310,10 +326,10 @@ p {
 
 /* Dashboard Specific Styles */
 .dashboard-items {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%) !important;
     border-radius: 20px !important;
     color: white !important;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+    box-shadow: 0 8px 25px rgba(24, 25, 129, 0.3) !important;
     transition: all 0.4s ease !important;
     border: none !important;
     min-height: 140px !important;
@@ -345,7 +361,7 @@ p {
 
 .dashboard-items:hover {
     transform: translateY(-8px) scale(1.02) !important;
-    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4) !important;
+    box-shadow: 0 15px 40px rgba(24, 25, 129, 0.4) !important;
 }
 
 .h1-dashboard {

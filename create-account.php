@@ -172,7 +172,7 @@ if ($_POST) {
 }
 
 body{
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     display: flex;
@@ -192,13 +192,13 @@ body{
 .container{
     width: 520px;
     max-width: 90%;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(206, 204, 204, 0.01);
     backdrop-filter: blur(10px);
     animation: slideUp 0.5s ease-out;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.11);
 }
 
 @keyframes slideUp {
@@ -217,7 +217,7 @@ body{
     font-weight: 700;
     text-align: center;
     margin-bottom: 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #dfe0e6ff 0%, #dcd1e7ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -227,7 +227,7 @@ body{
 label{
     display: block;
     margin: 15px 0 8px 0;
-    color: #333;
+    color: #e9e2e2bb;
     font-weight: 600;
     font-size: 14px;
     text-align: left;
@@ -238,16 +238,16 @@ label{
     padding: 14px 18px;
     margin: 0 0 5px 0;
     border-radius: 12px;
-    border: 2px solid #e0e0e0;
+    border: 1px solid #e0e0e049;
     font-size: 15px;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: #f8f9fa09;
     font-family: inherit;
 }
 
 .input-text:focus{
     outline: none;
-    border-color: #667eea;
+    border-color: #e0e2e7ad;
     background: white;
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
     transform: translateY(-2px);
@@ -260,7 +260,7 @@ label{
 .btn{
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(240deg, #2c2fc4ff 0%, #070569ff 100%);
     color: white;
     border: none;
     font-size: 17px;
@@ -269,12 +269,12 @@ label{
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 20px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(211, 214, 228, 0.17);
 }
 
 .btn:hover{
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.19);
 }
 
 .btn:active{

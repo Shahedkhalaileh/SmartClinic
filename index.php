@@ -34,15 +34,8 @@ if ($result) {
     $stats['appointments'] = $result->fetch_assoc()['count'];
 }
 
-// Get specialties with images (check if image column exists)
-$check_image_column = $database->query("SHOW COLUMNS FROM specialties LIKE 'image'");
-if ($check_image_column && $check_image_column->num_rows > 0) {
-    // If image column exists, get only specialties with images
-    $specialties_result = $database->query("SELECT * FROM specialties WHERE image IS NOT NULL AND image != '' ORDER BY id LIMIT 6");
-} else {
-    // If no image column, get all specialties
-    $specialties_result = $database->query("SELECT * FROM specialties LIMIT 6");
-}
+// Get specialties (show all specialties, not just those with images)
+$specialties_result = $database->query("SELECT * FROM specialties ORDER BY id LIMIT 6");
 
 // Get featured doctors
 $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name 
@@ -65,7 +58,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
@@ -82,7 +75,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
 
         /* Navigation */
         nav {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(1, 2, 51, 0.77);
             backdrop-filter: blur(15px);
             padding: 20px 0;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -102,9 +95,9 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .logo {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #dddae2ff 0%, #251d97ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -120,7 +113,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
 
         .nav-links a {
             text-decoration: none;
-            color: #444;
+            color: #f5f3f3ff;
             font-weight: 600;
             transition: all 0.3s ease;
             padding: 10px 18px;
@@ -136,13 +129,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .nav-links a:hover {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.12);
+            color: #eaebf0ff;
+            background: rgba(199, 203, 223, 0);
             transform: translateY(-2px);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             padding: 14px 32px;
             border-radius: 30px;
@@ -158,8 +151,8 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 12px 30px rgba(204, 208, 226, 0.06);
+    
         }
 
         .btn-primary:active {
@@ -204,7 +197,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.25);
+         background: linear-gradient(135deg, #a629c5ff 0%, #63067aff 100%);
             color: white;
             padding: 14px 32px;
             border-radius: 30px;
@@ -219,10 +212,10 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .btn-secondary:hover {
-            background: white;
-            color: #667eea;
+             background: linear-gradient(135deg, #a629c5ff 0%, #63067aff 100%);
+            color: white;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0);
             border-color: white;
         }
 
@@ -235,15 +228,15 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
 
         /* Statistics */
         .stats {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0);
             backdrop-filter: blur(15px);
             border-radius: 25px;
             padding: 60px 50px;
             margin: -60px auto 100px;
             max-width: 1200px;
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0);
             animation: slideUp 0.6s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0);
         }
 
         @keyframes slideUp {
@@ -260,11 +253,11 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .stat-card {
             text-align: left;
             padding: 20px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
             border-radius: 15px;
             color: white;
             transition: all 0.4s ease;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -329,13 +322,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         /* Sections */
         .section {
             padding: 90px 30px;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
             margin: 50px auto;
             border-radius: 25px;
             max-width: 1200px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .section-title {
@@ -343,7 +336,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             font-size: 42px;
             font-weight: 800;
             margin-bottom: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #efeff1ff 0%, #d0cdd4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -360,7 +353,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             transform: translateX(-50%);
             width: 80px;
             height: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #eaebecff 0%, #764ba2 100%);
             border-radius: 2px;
         }
 
@@ -373,13 +366,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .specialty-card {
-            background: white;
+             background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
             padding: 40px 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0);
             transition: all 0.4s ease;
-            border: 2px solid rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -409,7 +402,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .specialty-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
-            border-color: #667eea;
+            border-color: #e2e3e9ff;
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
         }
 
@@ -443,7 +436,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .specialty-name {
             font-size: 22px;
             font-weight: 700;
-            color: #333;
+            color: #e2dadaff;
             margin-bottom: 15px;
             letter-spacing: -0.3px;
             flex-grow: 1;
@@ -466,7 +459,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .doctor-card {
-            background: white;
+        background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
             padding: 35px 30px;
             border-radius: 20px;
             text-align: center;
@@ -478,14 +471,14 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .doctor-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
-            border-color: #667eea;
+            border-color: #e1e2e7ff;
         }
 
         .doctor-avatar {
             width: 110px;
             height: 110px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3f3db8ff 0%, #764ba2 100%);
             margin: 0 auto 25px;
             display: flex;
             align-items: center;
@@ -506,13 +499,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .doctor-name {
             font-size: 24px;
             font-weight: 700;
-            color: #333;
+           color: #ad750bff;
             margin-bottom: 12px;
             letter-spacing: -0.3px;
         }
 
         .doctor-specialty {
-            color: #667eea;
+            color: #f0eef5d7;
             font-weight: 600;
             margin-bottom: 20px;
             font-size: 16px;
@@ -526,7 +519,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         }
 
         .feature-card {
-            background: white;
+           background: linear-gradient(277deg, #181981ff 0%, #100242ff 100%);
             padding: 45px 35px;
             border-radius: 20px;
             text-align: center;
@@ -546,7 +539,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
         .feature-icon {
             font-size: 56px;
             margin-bottom: 25px;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+            filter: drop-shadow(0 4px 8px rgba(18, 94, 3, 0.1));
             transition: transform 0.4s;
         }
 
@@ -558,19 +551,19 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 15px;
-            color: #333;
+            color: #ad750bff;
             letter-spacing: -0.3px;
         }
 
         .feature-desc {
-            color: #666;
+            color: #f0ececff;
             line-height: 1.7;
             font-size: 15px;
         }
 
         /* Footer */
         footer {
-            background: rgba(255, 255, 255, 0.98);
+         background: rgba(1, 2, 51, 0.66);
             backdrop-filter: blur(15px);
             padding: 50px 20px;
             text-align: center;
@@ -623,7 +616,7 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                 gap: 15px;
                 padding: 15px 20px;
             }
-            
+ 
             .logo {
                 font-size: 24px;
             }
@@ -702,6 +695,13 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                 padding: 25px 20px;
             }
         }
+        img {
+  width: 122px;
+  height: auto;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+}
         
         @media (max-width: 480px) {
             .logo {
@@ -753,15 +753,20 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                 font-size: 18px;
             }
         }
+   
+
     </style>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/language.css">
 </head>
 <body>
     <!-- Navigation Bar -->
+     
     <nav>
         <div class="nav-container">
-            <div class="logo">🏥 Smart Clinic</div>
+            <div class="logo"><img src="l2.png"><i class="fa-solid fa-heart-pulse">SmartClinic</i>
+            
+        </div>
             <div class="nav-links">
                 <a href="#home"><?php echo t('home'); ?></a>
                 <a href="#specialties"><?php echo t('specialties'); ?></a>
@@ -850,7 +855,10 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
                         </div>';
                     }
                 } else {
-                    echo '<p style="text-align: center; color: #666;">' . t('no_specialties') . '</p>';
+                    echo '<div style="text-align: center; padding: 60px 20px; color: rgba(255, 255, 255, 0.9); font-size: 18px;">
+                            <p style="margin-bottom: 20px;">' . t('no_specialties') . '</p>
+                            <p style="font-size: 14px; opacity: 0.8;">' . (isArabic() ? 'لا توجد تخصصات طبية متاحة حالياً' : 'No medical specialties available at the moment') . '</p>
+                          </div>';
                 }
                 ?>
             </div>
@@ -915,17 +923,27 @@ $doctors_result = $database->query("SELECT d.*, s.sname as specialty_name
             </div>
         </div>
     </section>
+<footer style="background:#0a0f24; padding: 35px 0; margin-top: 40px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p><?php echo t('copyright'); ?></p>
-            <p style="margin-top: 10px;">
-                <a href="login.php" style="color: #667eea; text-decoration: none; margin: 0 10px;"><?php echo t('login'); ?></a> |
-                <a href="signup.php" style="color: #667eea; text-decoration: none; margin: 0 10px;"><?php echo t('signup'); ?></a>
-            </p>
+        <div style="margin-bottom: 20px; color: #eee8e8f6; font-size:15px; line-height: 1.7;">
+            <p><strong>📞 Mobile:</strong> +962-7X-XXX-XXXX</p>
+            <p><strong>📍 Location:</strong> Test,Test </p>
         </div>
-    </footer>
+
+        <div style="margin-bottom: 20px;">
+            <a href="https://www.facebook.com" style="margin-right: 15px; color:cyan; font-size:22px; text-decoration:none;">🔵<i class="fa-brands fa-square-facebook">Facebook</i> </a>
+            <a href="https://www.instagram.com" style="margin-right: 15px; color:purple; font-size:22px; text-decoration:none;">📸 Instagram</a>
+            <a href="" style="margin-right: 15px; color:green; font-size:22px; text-decoration:none;">💬 WhatsApp</a>
+        </div>
+
+        <p style="color:#b3b3b3; font-size:14px; margin-top: 25px;">
+            © 2025 Smart Clinic — All Rights Reserved
+        </p>
+
+    </div>
+</footer>
+
 
     <script>
         // Smooth scrolling

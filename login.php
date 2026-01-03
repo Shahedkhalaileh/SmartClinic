@@ -168,7 +168,7 @@ if ($_POST) {
 }
 
 body{
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+                    background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     display: flex;
@@ -199,14 +199,14 @@ body{
 
 .container{
     width: 420px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0);
     padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.11);
     backdrop-filter: blur(10px);
     animation: slideUp 0.5s ease-out;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+
 }
 
 @keyframes slideUp {
@@ -224,7 +224,7 @@ body{
     font-size: 36px;
     font-weight: 700;
     margin-bottom: 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #e8e9ecff 0%, #e9e4eeff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -236,29 +236,29 @@ body{
     padding: 14px 18px;
     margin: 12px 0;
     border-radius: 12px;
-    border: 2px solid #e0e0e0;
+    border: 1px solid #e0e0e07c;
     font-size: 15px;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: #f8f9fa07;
     font-family: inherit;
 }
 
 .input-text:focus{
     outline: none;
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    border-color: #dddee694;
+  background: white;
+    box-shadow: 0 0 0 4px rgba(207, 211, 230, 0.1);
     transform: translateY(-2px);
 }
 
 .input-text::placeholder{
-    color: #999;
+    color: #9b9696ff;
 }
 
 .btn{
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
     border: none;
     color: white;
     font-size: 16px;
@@ -267,7 +267,7 @@ body{
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 8px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(214, 215, 219, 0.27);
 }
 
 .btn:hover{
@@ -298,19 +298,19 @@ body{
 
 .container p {
     margin-top: 20px;
-    color: #666;
+    color: #dfd8d8ff;
     font-size: 14px;
 }
 
 .container a {
-    color: #667eea;
+    color: #ba0feeff;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .container a:hover {
-    color: #764ba2;
+       color: #ba0feeff;
     text-decoration: underline;
 }
 

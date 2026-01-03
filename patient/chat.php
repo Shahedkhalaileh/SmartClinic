@@ -22,8 +22,13 @@
     // Get selected doctor ID from GET parameter or default
     $receiver_id = isset($_GET['doctor_id']) ? intval($_GET['doctor_id']) : 0;
     
-    // Get list of all doctors
-    $doctors_list = $database->query("SELECT docid, docname FROM doctor ORDER BY docname ASC");
+    // Get list of doctors that patient has appointments with
+    $doctors_list = $database->query("SELECT DISTINCT d.docid, d.docname 
+                                      FROM doctor d
+                                      INNER JOIN schedule s ON CAST(s.docid AS UNSIGNED) = d.docid
+                                      INNER JOIN appointment a ON a.scheduleid = s.scheduleid
+                                      WHERE a.pid = $userid
+                                      ORDER BY d.docname ASC");
     
     // If no doctor selected, get first doctor or set to 0
     if ($receiver_id == 0 && $doctors_list->num_rows > 0) {
@@ -59,7 +64,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(277deg, #e4e4e9ff 0%, #171677ff 50%, #0f0966ff 100%);
             background-size: 200% 200%;
             animation: gradientShift 15s ease infinite;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -96,7 +101,7 @@
             background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-            border-left: 1px solid rgba(102, 126, 234, 0.1) !important;
+            border-left: 1px solid rgba(24, 25, 129, 0.1) !important;
         }
         
         .dash-body {
@@ -123,17 +128,25 @@
         }
         
         .menu-btn:hover {
-            background: rgba(102, 126, 234, 0.1) !important;
+            background: rgba(24, 25, 129, 0.1) !important;
             transform: translateX(-5px) !important;
         }
         
         .menu-active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
+            color: white !important;
+        }
+        
+        .menu-active .menu-text {
+            color: white !important;
+        }
+        
+        .menu-active .non-style-link-menu {
             color: white !important;
         }
         
         .profile-container {
-            background: rgba(102, 126, 234, 0.05) !important;
+            background: rgba(24, 25, 129, 0.05) !important;
             border-radius: 15px !important;
             padding: 15px !important;
             margin: 10px !important;
@@ -166,7 +179,7 @@
         }
         
         .non-style-link-menu:hover {
-            color: #667eea !important;
+            color: #4a31b9 !important;
         }
         
         .menu-active .non-style-link-menu {
@@ -186,7 +199,7 @@
         }
         
         .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             padding: 20px 30px;
             display: flex;
@@ -226,7 +239,7 @@
         }
         
         .doctor-select option {
-            background: #667eea;
+            background: #4a31b9;
             color: white;
         }
         
@@ -273,7 +286,7 @@
         }
         
         .message.sent {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%) !important;
             color: white !important;
             align-self: flex-end !important;
             margin-left: auto !important;
@@ -294,7 +307,7 @@
         .chat-input-container {
             padding: 20px 30px;
             background: white;
-            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            border-top: 1px solid rgba(24, 25, 129, 0.1);
             display: flex;
             gap: 15px;
             align-items: center;
@@ -303,7 +316,7 @@
         #messageInput {
             flex: 1;
             padding: 14px 20px;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(24, 25, 129, 0.2);
             border-radius: 25px;
             font-size: 15px;
             transition: all 0.3s ease;
@@ -311,13 +324,13 @@
         }
         
         #messageInput:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4a31b9;
+            box-shadow: 0 0 0 3px rgba(24, 25, 129, 0.1);
         }
         
         .send-btn {
             padding: 14px 35px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(240deg, #4a31b9ff 0%, #0c0242ff 100%);
             color: white;
             border: none;
             border-radius: 25px;
@@ -325,12 +338,12 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 15px rgba(24, 25, 129, 0.3);
         }
         
         .send-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(24, 25, 129, 0.4);
         }
         
         .send-btn:active {
@@ -345,7 +358,7 @@
             background: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 25px;
-            color: #667eea;
+            color: #4a31b9;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
@@ -415,6 +428,11 @@
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-appoinment">
                         <a href="specialties.php" class="non-style-link-menu"><div><p class="menu-text">التخصصات</p></div></a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-ai">
+                        <a href="chatbot.php" class="non-style-link-menu"><div><p class="menu-text">Chat Bot</p></div></a>
                     </td>
                 </tr>
                 <tr class="menu-row">
